@@ -13,13 +13,10 @@ import {
 const MAX_RETRIES = 3
 const RETRY_DELAY = 1000 // ms
 
-// Get base URL from config
-const getBaseUrl = (config: KaitenConfig): string => {
-  // Всегда используем относительный путь /api/kaiten (прокси), иначе CORS блокирует на проде.
-  // Игнорируем config.baseUrl если это абсолютный URL (мог сохраниться в localStorage со старой версии).
-  if (config.baseUrl && config.baseUrl.startsWith('/')) return config.baseUrl
-  return `/api/kaiten`
-}
+// Все запросы к Kaiten идут через serverless /api/kaiten; токен только на сервере.
+const KAITEN_API_PREFIX = '/api/kaiten'
+
+const getBaseUrl = (_config: KaitenConfig): string => KAITEN_API_PREFIX
 
 // Retry wrapper for API calls
 const withRetry = async <T>(
@@ -57,57 +54,32 @@ const apiRequest = async <T>(
   } else {
     fullUrl = `${baseUrl}${urlPath}`
   }
-  // В браузере всегда используем прокси (обход CORS): старый бандл или localStorage могли оставить прямой URL на kaiten.ru
+  // Все запросы только через /api/kaiten; токен не передаём — используется только в serverless.
   if (typeof window !== 'undefined' && fullUrl.startsWith('http')) {
-    fullUrl = `/api/kaiten${urlPath.startsWith('/') ? urlPath : `/${urlPath}`}`
-  }
-  
-  // В режиме разработки убеждаемся, что URL начинается с /api/kaiten
-  if (import.meta.env.DEV && !fullUrl.startsWith('http') && !fullUrl.startsWith('/api/kaiten')) {
-    console.warn('Kaiten API: URL не начинается с /api/kaiten в dev режиме:', fullUrl)
+    fullUrl = `${KAITEN_API_PREFIX}${urlPath.startsWith('/') ? urlPath : `/${urlPath}`}`
   }
 
-  // Логирование для отладки (только в development)
+  if (import.meta.env.DEV && !fullUrl.startsWith(KAITEN_API_PREFIX)) {
+    console.warn('Kaiten API: ожидается URL /api/kaiten:', fullUrl)
+  }
+
   if (import.meta.env.DEV) {
-    console.log('Kaiten API Request:', {
-      url: fullUrl,
-      domain: config.domain,
-      hasApiKey: !!config.apiKey,
-      apiKeyLength: config.apiKey?.length || 0,
-      apiKeyPrefix: config.apiKey ? config.apiKey.substring(0, 20) + '...' : 'none',
-      authorizationHeader: `Bearer ${config.apiKey?.substring(0, 20) || ''}...`,
-    })
+    console.log('Kaiten API Request:', { url: fullUrl, domain: config.domain })
   }
 
   try {
-    // В режиме разработки добавляем заголовок с доменом для прокси
     const headers: Record<string, string> = {
-      'Authorization': `Bearer ${config.apiKey}`,
       'Accept': 'application/json',
       ...(options.headers as Record<string, string>),
     }
-    
-    // Content-Type только для POST/PUT/PATCH запросов
-    if (options.method && ['POST', 'PUT', 'PATCH'].includes(options.method)) {
+    // Токен не отправляем с клиента — serverless подставляет KAITEN_TOKEN.
+    if (options.method && ['POST', 'PUT', 'PATCH'].includes(options.method || '')) {
       headers['Content-Type'] = 'application/json'
     }
-    
-    // Прокси использует домен для запроса к Kaiten; всегда только поддомен (onyagency), без .kaiten.ru
-    if (fullUrl.startsWith('/api/kaiten')) {
-      const subdomain = (config.domain || '').trim().replace(/\.kaiten\.ru$/i, '').split('.')[0]
-      headers['X-Kaiten-Domain'] = subdomain || config.domain || 'onyagency'
-    }
-    
-    // Явно указываем метод GET, если не указан другой
+    const subdomain = (config.domain || '').trim().replace(/\.kaiten\.ru$/i, '').split('.')[0]
+    headers['X-Kaiten-Domain'] = subdomain || config.domain || 'onyagency'
+
     const requestMethod = options.method || 'GET'
-    
-    if (import.meta.env.DEV) {
-      console.log('Kaiten API Request Details:', {
-        method: requestMethod,
-        url: fullUrl,
-        hasAuth: !!headers['Authorization'],
-      })
-    }
     
     const response = await fetch(fullUrl, {
       ...options,
@@ -123,7 +95,7 @@ const apiRequest = async <T>(
       
       // Добавляем более детальную информацию об ошибке
       if (response.status === 401) {
-        errorMessage = 'Ошибка авторизации: проверьте правильность API ключа'
+        errorMessage = 'Ошибка авторизации: проверьте KAITEN_TOKEN на сервере'
       } else if (response.status === 404) {
         const urlMatch = url.match(/\/boards\/(\d+)/)
         // Сообщение про «список пространств» только для запроса именно списка /spaces, не для /spaces/.../boards/...
@@ -327,14 +299,7 @@ export const getBoardGroups = async (
     }
     
     if (import.meta.env.DEV) {
-      console.log('getBoardGroups:', {
-        boardId,
-        boardIdType: typeof boardId,
-        spaceId: config.spaceId,
-        domain: config.domain,
-        url: `/boards/${boardId}/groups`,
-        hasApiKey: !!config.apiKey,
-      })
+      console.log('getBoardGroups:', { boardId, spaceId: config.spaceId, domain: config.domain })
     }
     
     // Пробуем получить группы доски: /groups, /lanes, /columns; /entity/; разбор /spaces с вложенными данными

@@ -21,7 +21,6 @@ export const KaitenConnectForm: React.FC<KaitenConnectFormProps> = ({
   className = '',
   existingConfig,
 }) => {
-  const [apiKey, setApiKey] = useState<string>(existingConfig?.apiKey || '')
   const [domain, setDomain] = useState<string>(existingConfig?.domain || 'onyagency')
   const [boards, setBoards] = useState<KaitenBoard[]>([])
   const [selectedBoardId, setSelectedBoardId] = useState<number | null>(existingConfig?.boardId || null)
@@ -35,13 +34,8 @@ export const KaitenConnectForm: React.FC<KaitenConnectFormProps> = ({
     setConnectedConfig(existingConfig || null)
   }, [existingConfig])
 
-  // Загрузка списка досок
+  // Загрузка списка досок (токен на сервере — KAITEN_TOKEN)
   const handleLoadBoards = async () => {
-    if (!apiKey.trim()) {
-      setError('Введите API ключ')
-      return
-    }
-
     if (!domain.trim()) {
       setError('Введите домен Kaiten')
       return
@@ -50,30 +44,21 @@ export const KaitenConnectForm: React.FC<KaitenConnectFormProps> = ({
     try {
       setLoadingBoards(true)
       setError(null)
-      
-      // Очищаем домен от .kaiten.ru если пользователь ввел полный домен
-      let cleanDomain = domain.trim()
-      cleanDomain = cleanDomain.replace(/\.kaiten\.ru$/, '') // Убираем .kaiten.ru если есть
-      cleanDomain = cleanDomain.replace(/^https?:\/\//, '') // Убираем протокол если есть
-      cleanDomain = cleanDomain.split('/')[0] // Берем только домен без пути
-      cleanDomain = cleanDomain.split('.')[0] // Берем только первую часть (например, onyagency из onyagency.kaiten.ru)
-      
-      const tempConfig: KaitenConfig = {
-        domain: cleanDomain,
-        apiKey: apiKey.trim(),
-      }
-      
+
+      let cleanDomain = domain.trim().replace(/\.kaiten\.ru$/i, '').replace(/^https?:\/\//, '').split('/')[0].split('.')[0] || domain.trim()
+      const tempConfig: KaitenConfig = { domain: cleanDomain }
+
       const boardsList = await getBoards(tempConfig)
       setBoards(boardsList)
-      
+
       if (boardsList.length === 0) {
-        setError('Не найдено досок, доступных для вашего API ключа')
+        setError('Не найдено досок. Проверьте домен и настройку KAITEN_TOKEN на сервере.')
       }
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message)
       } else {
-        setError('Не удалось загрузить список досок. Проверьте правильность API ключа и домена')
+        setError('Не удалось загрузить список досок. Проверьте домен.')
       }
     } finally {
       setLoadingBoards(false)
@@ -84,32 +69,20 @@ export const KaitenConnectForm: React.FC<KaitenConnectFormProps> = ({
     e.preventDefault()
     setError(null)
 
-    // Валидация
-    if (!apiKey.trim()) {
-      setError('Введите API ключ')
-      return
-    }
-
     if (!domain.trim()) {
       setError('Введите домен Kaiten')
       return
     }
-
     if (!selectedBoardId) {
       setError('Выберите доску из списка')
       return
     }
 
-    // Находим выбранную доску, чтобы получить space_id
     const selectedBoard = boards.find(b => b.id === selectedBoardId)
-    const spaceId = selectedBoard?.space_id
-
-    // Создаем конфигурацию
     const config: KaitenConfig = {
-      domain: domain.trim(),
-      apiKey: apiKey.trim(),
+      domain: domain.trim().replace(/\.kaiten\.ru$/i, '').split('.')[0] || domain.trim(),
       boardId: selectedBoardId,
-      spaceId: spaceId, // Добавляем space_id, если доска была выбрана из списка
+      spaceId: selectedBoard?.space_id,
     }
 
     setConnectedConfig(config)
@@ -180,22 +153,11 @@ export const KaitenConnectForm: React.FC<KaitenConnectFormProps> = ({
           </div>
 
           <div className="kaiten-connect-form-field">
-            <label className="kaiten-connect-form-label">
-              API ключ
-            </label>
-            <Input
-              type="primary"
-              size="small"
-              placeholder="Введите API ключ"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              inputType="password"
-            />
             <Button
               type="backless"
               size="small"
               onClick={handleLoadBoards}
-              disabled={loadingBoards || !apiKey.trim() || !domain.trim()}
+              disabled={loadingBoards || !domain.trim()}
               className="kaiten-connect-form-load-boards-button"
             >
               {loadingBoards ? 'Загрузка...' : 'Загрузить список досок'}

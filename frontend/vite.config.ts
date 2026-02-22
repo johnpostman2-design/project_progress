@@ -17,45 +17,20 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
         ws: false,
-        rewrite: (path) => {
-          const rewritten = path.replace(/^\/api\/kaiten/, '/api/v1')
-          console.log('[Vite Proxy] rewrite:', { original: path, rewritten })
-          return rewritten
-        },
+        rewrite: (path) => path.replace(/^\/api\/kaiten/, '/api/v1'),
         configure: (proxy, _options) => {
-          console.log('[Vite Proxy] Proxy configured for /api/kaiten')
-          
           proxy.on('proxyReq', (proxyReq, req, _res) => {
-            const authHeader = req.headers.authorization
-            if (authHeader) {
-              proxyReq.setHeader('Authorization', authHeader)
+            // Токен только из env сервера (не из клиентского бандла)
+            const serverToken = process.env.VITE_KAITEN_TOKEN
+            if (serverToken) {
+              proxyReq.setHeader('Authorization', `Bearer ${serverToken}`)
             }
-            
             const kaitenDomain = req.headers['x-kaiten-domain'] as string
             if (kaitenDomain && kaitenDomain !== 'onyagency') {
-              // Меняем Host заголовок для другого домена
               proxyReq.setHeader('Host', `${kaitenDomain}.kaiten.ru`)
             }
-            
-            console.log('[Vite Proxy] Request:', {
-              method: req.method,
-              url: req.url,
-              path: proxyReq.path,
-              host: proxyReq.getHeader('host'),
-              hasAuth: !!authHeader,
-              domain: kaitenDomain || 'onyagency',
-            })
           })
-          
-          proxy.on('proxyRes', (proxyRes, req, _res) => {
-            console.log('[Vite Proxy] Response:', {
-              status: proxyRes.statusCode,
-              method: req.method,
-              url: req.url,
-            })
-          })
-          
-          proxy.on('error', (err, req, res) => {
+          proxy.on('error', (err) => {
             console.error('[Vite Proxy] Error:', err)
           })
         },

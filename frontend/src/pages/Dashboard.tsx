@@ -39,19 +39,16 @@ export const Dashboard: React.FC = () => {
   const [showRebindModal, setShowRebindModal] = useState(false)
   const [kaitenConfig, setKaitenConfigState] = useState<KaitenConfig | null>(null)
 
-  // Восстановление конфига Kaiten из localStorage при загрузке (чтобы после перезагрузки подтягивались задачи)
+  // Восстановление конфига Kaiten из localStorage (только domain, boardId, spaceId; токен не храним)
   useEffect(() => {
     try {
       const stored = localStorage.getItem('kaitenConfig')
       if (stored) {
         const parsed = JSON.parse(stored) as KaitenConfig
-        if (parsed?.domain && parsed?.apiKey) {
-          // Убираем старый абсолютный baseUrl (вызовы идут через прокси /api/kaiten)
-          if (parsed.baseUrl && !parsed.baseUrl.startsWith('/')) {
-            delete parsed.baseUrl
-            localStorage.setItem('kaitenConfig', JSON.stringify(parsed))
-          }
-          setKaitenConfigState(parsed)
+        if (parsed?.domain) {
+          const safe = { domain: parsed.domain, boardId: parsed.boardId, spaceId: parsed.spaceId }
+          if (parsed.baseUrl && !parsed.baseUrl.startsWith('/')) delete (safe as Record<string, unknown>).baseUrl
+          setKaitenConfigState(safe as KaitenConfig)
         }
       }
     } catch (_e) {
@@ -63,9 +60,7 @@ export const Dashboard: React.FC = () => {
     setKaitenConfigState(config)
     if (config) {
       try {
-        // Не сохраняем абсолютный baseUrl (старый формат) — всегда используем прокси /api/kaiten
-        const toStore = { ...config }
-        if (toStore.baseUrl && !toStore.baseUrl.startsWith('/')) delete toStore.baseUrl
+        const toStore = { domain: config.domain, boardId: config.boardId, spaceId: config.spaceId }
         localStorage.setItem('kaitenConfig', JSON.stringify(toStore))
       } catch (_e) {
         // ignore quota etc

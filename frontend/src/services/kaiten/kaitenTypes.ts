@@ -66,11 +66,11 @@ export class NetworkError extends Error {
   }
 }
 
-// Configuration
+// Configuration. Токен только на сервере (KAITEN_TOKEN), apiKey на клиенте не хранится.
 export interface KaitenConfig {
   domain: string
-  apiKey: string
+  apiKey?: string // не используется для запросов; оставлен для совместимости типов
   baseUrl?: string
-  boardId?: number // ID доски, если указан в URL при подключении
-  spaceId?: number // ID space, если доска находится в space
+  boardId?: number
+  spaceId?: number
 }
