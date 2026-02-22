@@ -18,8 +18,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(401).json({ error: 'Missing Authorization header' })
   }
 
-  const pathSeg = req.query.path
-  const path = Array.isArray(pathSeg) ? pathSeg.join('/') : (pathSeg as string) || ''
+  let path = Array.isArray(req.query.path) ? req.query.path.join('/') : (req.query.path as string) || ''
+  if (!path && req.url) {
+    const match = req.url.match(/\/api\/kaiten\/([^?]*)/)
+    if (match) path = match[1]
+  }
   const queryKeys = Object.keys(req.query).filter((k) => k !== 'path')
   const query = queryKeys.length
     ? '?' + queryKeys.map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(String(req.query[k]))}`).join('&')

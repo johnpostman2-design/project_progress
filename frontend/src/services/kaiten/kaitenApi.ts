@@ -124,14 +124,15 @@ const apiRequest = async <T>(
       if (response.status === 401) {
         errorMessage = 'Ошибка авторизации: проверьте правильность API ключа'
       } else if (response.status === 404) {
-        // Более детальное сообщение для 404
         const urlMatch = url.match(/\/boards\/(\d+)/)
-        const boardId = urlMatch ? urlMatch[1] : 'неизвестен'
-        errorMessage = `Ресурс не найден: ${url}. Возможные причины:
-- Доска с ID ${boardId} не существует
-- API ключ не имеет доступа к этой доске
-- Неправильный формат URL или ID доски
-Проверьте правильность ID доски и права доступа API ключа`
+        if (url === '/spaces' || url.startsWith('/spaces')) {
+          errorMessage = 'Не удалось загрузить список пространств и досок. Проверьте API ключ Kaiten и права доступа (должен быть доступ к пространствам).'
+        } else if (urlMatch) {
+          const boardId = urlMatch[1]
+          errorMessage = `Ресурс не найден: доска с ID ${boardId}. Проверьте, что доска существует и API ключ имеет к ней доступ.`
+        } else {
+          errorMessage = `Ресурс не найден: ${url}. Проверьте API ключ и права доступа в Kaiten.`
+        }
       } else if (response.status === 403) {
         errorMessage = 'Доступ запрещен: проверьте права доступа API ключа'
       } else if (response.status === 405) {
