@@ -95,3 +95,4 @@ out/
 # Misc
 *.pem
 .certificates/
+.vercel
