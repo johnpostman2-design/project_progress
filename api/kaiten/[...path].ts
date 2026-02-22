@@ -12,17 +12,23 @@ export default async function handler(req: { method?: string; headers: Record<st
 
   let domain = (Array.isArray(req.headers['x-kaiten-domain']) ? req.headers['x-kaiten-domain'][0] : req.headers['x-kaiten-domain']) as string || 'onyagency'
   domain = (domain || '').trim().replace(/\.kaiten\.ru$/i, '').split('.')[0] || 'onyagency'
-  const auth = (Array.isArray(req.headers['authorization']) ? req.headers['authorization'][0] : req.headers['authorization']) as string
+  const auth = (Array.isArray(req.headers['authorization']) ? req.headers['authorization'][0] : req.headers['authorization']) || (Array.isArray(req.headers['Authorization']) ? req.headers['Authorization'][0] : req.headers['Authorization']) as string
   if (!auth) {
     return res.status(401).json({ error: 'Missing Authorization header' })
   }
 
-  const pathSeg = req.query.path
-  const path = Array.isArray(pathSeg) ? pathSeg.join('/') : (pathSeg as string) || ''
+  let path = Array.isArray(req.query.path) ? req.query.path.join('/') : (req.query.path as string) || ''
+  if (!path && (req as { url?: string }).url) {
+    const rawUrl = (req as { url: string }).url
+    const pathname = rawUrl.startsWith('http') ? new URL(rawUrl).pathname : rawUrl
+    const match = pathname.match(/\/api\/kaiten\/([^?]*)/)
+    if (match) path = match[1]
+  }
+  path = (path || '').replace(/^\/+/, '')
   const queryKeys = Object.keys(req.query).filter((k) => k !== 'path')
   const query = queryKeys.length
     ? '?' + queryKeys.map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(String(req.query[k]))}`).join('&')
-    : ''
+    : ((req as { url?: string }).url && (req as { url: string }).url.includes('?') ? '?' + (req as { url: string }).url.split('?')[1] : '')
 
   const targetUrl = `https://${domain}.kaiten.ru/api/v1/${path}${query}`
 

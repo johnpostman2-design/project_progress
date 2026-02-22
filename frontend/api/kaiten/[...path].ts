@@ -14,20 +14,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   let domain = (req.headers['x-kaiten-domain'] as string) || 'onyagency'
   domain = (domain || '').trim().replace(/\.kaiten\.ru$/i, '').split('.')[0] || 'onyagency'
-  const auth = req.headers['authorization'] as string
+  const auth = (req.headers['authorization'] ?? req.headers['Authorization']) as string
   if (!auth) {
     return res.status(401).json({ error: 'Missing Authorization header' })
   }
 
+  // Путь: на Vercel req.query.path может быть пустым — извлекаем из req.url/pathname
   let path = Array.isArray(req.query.path) ? req.query.path.join('/') : (req.query.path as string) || ''
-  if (!path && req.url) {
-    const match = req.url.match(/\/api\/kaiten\/([^?]*)/)
+  if (!path) {
+    const rawUrl = req.url || (req as unknown as { path?: string }).path || ''
+    const pathname = rawUrl.startsWith('http') ? new URL(rawUrl).pathname : rawUrl
+    const match = pathname.match(/\/api\/kaiten\/([^?]*)/)
     if (match) path = match[1]
   }
+  path = path.replace(/^\/+/, '') // убрать ведущие слеши
   const queryKeys = Object.keys(req.query).filter((k) => k !== 'path')
   const query = queryKeys.length
     ? '?' + queryKeys.map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(String(req.query[k]))}`).join('&')
-    : ''
+    : (req.url && req.url.includes('?') ? '?' + req.url.split('?')[1] : '')
 
   const targetUrl = `https://${domain}.kaiten.ru/api/v1/${path}${query}`
 
