@@ -39,6 +39,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     Authorization: auth,
     Accept: 'application/json',
     Host: `${domain}.kaiten.ru`,
+    'User-Agent': req.headers['user-agent'] || 'Mozilla/5.0 (compatible; KaitenProxy/1.0)',
+    Origin: `https://${domain}.kaiten.ru`,
+    Referer: `https://${domain}.kaiten.ru/`,
   }
   if (req.headers['content-type']) {
     headers['Content-Type'] = req.headers['content-type'] as string
