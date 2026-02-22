@@ -2,8 +2,6 @@
  * Прокси к Kaiten API. Только KAITEN_API_BASE и KAITEN_TOKEN.
  * Timeout 8s, in-memory cache 30s для GET /spaces и /spaces/:id/boards, лог запросов.
  */
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-
 const REQUEST_TIMEOUT_MS = 8000
 const CACHE_TTL_MS = 30000
 
@@ -28,7 +26,7 @@ function logRequest(
   console.log(`[Kaiten] ${method} ${pathForLog} → ${status} (${durationMs}ms)${errPart}`)
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   const start = Date.now()
 
   if (req.method === 'OPTIONS') {
