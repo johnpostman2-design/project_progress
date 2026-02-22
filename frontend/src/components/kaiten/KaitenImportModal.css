@@ -115,6 +115,22 @@
   font-size: var(--font-size-label-small, 14px);
 }
 
+.kaiten-import-modal-placeholder-tip {
+  font-size: var(--font-size-caption, 12px);
+  line-height: 1.4;
+  color: var(--content-secondary, #666);
+  background: var(--surface-tertiary-main, #f5f5f5);
+  padding: var(--spacing-12, 12px);
+  border-radius: 8px;
+  margin-bottom: var(--spacing-12, 12px);
+}
+.kaiten-import-modal-placeholder-tip code {
+  font-size: 11px;
+  background: rgba(0,0,0,0.06);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
 .kaiten-import-modal-error {
   color: var(--content-error, red);
   padding: var(--spacing-8, 8px) 0 0 0;

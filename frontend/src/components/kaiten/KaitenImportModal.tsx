@@ -225,6 +225,12 @@ export const KaitenImportModal: React.FC<KaitenImportModalProps> = ({
             </label>
           </div>
           {groups.length > 0 ? (
+            <>
+              {groups.length === 1 && groups[0].name === 'Все задачи' && (
+                <div className="kaiten-import-modal-placeholder-tip">
+                  Этапы не загрузились с Kaiten (часто из‑за ограничения API по IP на стороне Kaiten). Чтобы получить реальные этапы: один раз подключите эту доску с локального компьютера (<code>npm run dev</code> в папке frontend) и импортируйте проект — этапы сохранятся в облако и будут доступны на проде.
+                </div>
+              )}
             <div className="kaiten-import-modal-stages-list" data-node-id="247:1873">
               {[...groups]
                 .sort((a, b) => {
@@ -249,6 +255,7 @@ export const KaitenImportModal: React.FC<KaitenImportModalProps> = ({
                   />
                 ))}
             </div>
+            </>
           ) : (
             <Button
               type="backless"
