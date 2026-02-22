@@ -46,6 +46,11 @@ export const Dashboard: React.FC = () => {
       if (stored) {
         const parsed = JSON.parse(stored) as KaitenConfig
         if (parsed?.domain && parsed?.apiKey) {
+          // Убираем старый абсолютный baseUrl (вызовы идут через прокси /api/kaiten)
+          if (parsed.baseUrl && !parsed.baseUrl.startsWith('/')) {
+            delete parsed.baseUrl
+            localStorage.setItem('kaitenConfig', JSON.stringify(parsed))
+          }
           setKaitenConfigState(parsed)
         }
       }
@@ -58,7 +63,10 @@ export const Dashboard: React.FC = () => {
     setKaitenConfigState(config)
     if (config) {
       try {
-        localStorage.setItem('kaitenConfig', JSON.stringify(config))
+        // Не сохраняем абсолютный baseUrl (старый формат) — всегда используем прокси /api/kaiten
+        const toStore = { ...config }
+        if (toStore.baseUrl && !toStore.baseUrl.startsWith('/')) delete toStore.baseUrl
+        localStorage.setItem('kaitenConfig', JSON.stringify(toStore))
       } catch (_e) {
         // ignore quota etc
       }

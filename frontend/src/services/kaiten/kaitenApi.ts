@@ -15,8 +15,10 @@ const RETRY_DELAY = 1000 // ms
 
 // Get base URL from config
 const getBaseUrl = (config: KaitenConfig): string => {
-  // Всегда используем относительный путь /api/kaiten: в dev — прокси Vite, на проде — серверный прокси Vercel (обход CORS)
-  return config.baseUrl || `/api/kaiten`
+  // Всегда используем относительный путь /api/kaiten (прокси), иначе CORS блокирует на проде.
+  // Игнорируем config.baseUrl если это абсолютный URL (мог сохраниться в localStorage со старой версии).
+  if (config.baseUrl && config.baseUrl.startsWith('/')) return config.baseUrl
+  return `/api/kaiten`
 }
 
 // Retry wrapper for API calls

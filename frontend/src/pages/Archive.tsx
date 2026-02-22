@@ -36,7 +36,13 @@ export const Archive: React.FC = () => {
       const stored = localStorage.getItem('kaitenConfig')
       if (stored) {
         const parsed = JSON.parse(stored) as KaitenConfig
-        if (parsed?.domain && parsed?.apiKey) setKaitenConfigState(parsed)
+        if (parsed?.domain && parsed?.apiKey) {
+          if (parsed.baseUrl && !parsed.baseUrl.startsWith('/')) {
+            delete parsed.baseUrl
+            localStorage.setItem('kaitenConfig', JSON.stringify(parsed))
+          }
+          setKaitenConfigState(parsed)
+        }
       }
     } catch (_e) {}
   }, [])
