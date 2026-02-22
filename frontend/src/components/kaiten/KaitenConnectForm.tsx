@@ -34,7 +34,8 @@ export const KaitenConnectForm: React.FC<KaitenConnectFormProps> = ({
     setConnectedConfig(existingConfig || null)
   }, [existingConfig])
 
-  // Загрузка списка досок (токен на сервере — KAITEN_TOKEN)
+  // Загрузка списка досок только по действию пользователя (выбор доски при создании/импорте).
+  // Не вызывать getBoards при загрузке страницы или при открытии проекта.
   const handleLoadBoards = async () => {
     if (!domain.trim()) {
       setError('Введите домен Kaiten')
