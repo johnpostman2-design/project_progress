@@ -274,6 +274,26 @@ export const getBoards = async (config: KaitenConfig): Promise<KaitenBoard[]> =>
         }
       }
       
+      // Если досок нет (API не отдаёт /spaces/{id}/boards), пробуем GET /boards
+      if (allBoardsMap.size === 0) {
+        try {
+          const allBoardsList = await apiRequest<any[]>('/boards', config)
+          if (Array.isArray(allBoardsList)) {
+            allBoardsList.forEach((board: any) => {
+              const spaceId = board.space_id ?? spaces[0]?.id
+              allBoardsMap.set(board.id, {
+                id: board.id,
+                name: board.name || board.title || `Доска #${board.id}`,
+                description: board.description ?? null,
+                created_at: board.created_at || new Date().toISOString(),
+                updated_at: board.updated_at || new Date().toISOString(),
+                space_id: spaceId,
+              })
+            })
+          }
+        } catch (_) {}
+      }
+      
       const allBoards = Array.from(allBoardsMap.values())
       
       if (import.meta.env.DEV) {
@@ -317,11 +337,24 @@ export const getBoardGroups = async (
       })
     }
     
-    // Пробуем получить группы доски разными способами
-    // Вариант 1: Стандартный endpoint
+    // Пробуем получить группы доски: /groups, затем /lanes (разные версии Kaiten)
     try {
       return await apiRequest<KaitenGroup[]>(`/boards/${boardId}/groups`, config)
-    } catch (error) {
+    } catch (groupsErr) {
+      try {
+        const lanes = await apiRequest<any[]>(`/boards/${boardId}/lanes`, config)
+        if (Array.isArray(lanes)) {
+          return lanes.map((lane: any) => ({
+            id: lane.id,
+            name: lane.name || lane.title || 'Без названия',
+            board_id: lane.board_id ?? boardId,
+            position: lane.position ?? lane.order ?? 0,
+            created_at: lane.created_at || new Date().toISOString(),
+            updated_at: lane.updated_at || new Date().toISOString(),
+          }))
+        }
+      } catch (_) {}
+      const error = groupsErr
       // Вариант 2: Если есть spaceId, пробуем через space
       if (error instanceof KaitenApiError && error.statusCode === 404 && config.spaceId) {
         if (import.meta.env.DEV) {
