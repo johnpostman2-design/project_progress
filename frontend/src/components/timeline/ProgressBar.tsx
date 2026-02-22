@@ -1,6 +1,5 @@
 import React from 'react'
-import { Icon32Pause } from '../common/icons/Icon32Pause'
-import { Icon16Check } from '../common/icons/Icon16Check'
+import { Icon } from '../ui/Icon'
 import './ProgressBar.css'
 
 interface ProgressBarProps {
@@ -43,12 +42,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       </div>
       {isCompleted && (
         <div className="progress-bar-icon progress-bar-icon-check">
-          <Icon16Check />
+          <Icon name="check" size={16} />
         </div>
       )}
       {isPaused && (
         <div className="progress-bar-icon">
-          <Icon32Pause />
+          <Icon name="pause" size={32} />
         </div>
       )}
     </div>

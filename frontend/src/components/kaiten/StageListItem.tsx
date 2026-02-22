@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { KaitenGroup } from '../../services/kaiten/kaitenTypes'
 import { Button } from '../common/Button'
 import { Input } from '../common/Input'
-import { Icon16Minus } from '../common/icons/Icon16Minus'
-import { Icon16ArrowRight } from '../common/icons/Icon16ArrowRight'
+import { Icon } from '../ui/Icon'
 import './StageListItem.css'
 
 interface StageListItemProps {
@@ -189,7 +188,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
               className="stage-list-item-delete-button button-icon-only"
               data-node-id="247:2221"
             >
-              <Icon16Minus />
+              <Icon name="minus" size={16} />
             </Button>
           )}
         </div>
@@ -223,7 +222,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
                 {formatDate(startDate)}
               </button>
               <div className="stage-list-item-arrow" data-node-id="247:2207">
-                <Icon16ArrowRight className="stage-list-item-arrow-icon" />
+                <Icon name="arrow-right" size={16} className="stage-list-item-arrow-icon" />
               </div>
               <input
                 ref={endDateInputRef}

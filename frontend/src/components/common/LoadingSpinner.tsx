@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon24Loading } from './icons/Icon24Loading'
+import { Icon } from '../ui/Icon'
 import './LoadingSpinner.css'
 
 interface LoadingSpinnerProps {
@@ -13,7 +13,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 }) => {
   return (
     <div className={`loading-spinner loading-spinner-${size} ${className}`} role="status" aria-label="Загрузка">
-      <Icon24Loading />
+      <Icon name="loading" size={24} className="icon-spin" />
     </div>
   )
 }

@@ -1,10 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { Stage } from '../../models/stage'
-import { Icon16Check } from '../common/icons/Icon16Check'
-// import { Icon16Pause } from '../common/icons/Icon16Pause' // временно: пауза отключена
-import { Icon16Pencil } from '../common/icons/Icon16Pencil'
-import { Icon16Reload } from '../common/icons/Icon16Reload'
-import { Icon16Trash } from '../common/icons/Icon16Trash'
+import { Icon } from '../ui/Icon'
 import { Button } from '../common/Button'
 import './StageDropdownMenu.css'
 
@@ -50,24 +46,24 @@ export const StageDropdownMenu: React.FC<StageDropdownMenuProps> = ({
       <div className="stage-dropdown-menu-primary">
         {isCompleted && onReactivate && (
           <Button type="text" size="small" onClick={onReactivate} className="stage-dropdown-menu-item">
-            <Icon16Reload className="stage-dropdown-menu-icon" />
+            <Icon name="reload" size={16} className="stage-dropdown-menu-icon" />
             <span className="stage-dropdown-menu-text">Вернуть в работу</span>
           </Button>
         )}
         {!isCompleted && (
           <Button type="text" size="small" onClick={onComplete} className="stage-dropdown-menu-item">
-            <Icon16Check className="stage-dropdown-menu-icon" />
+            <Icon name="check" size={16} className="stage-dropdown-menu-icon" />
             <span className="stage-dropdown-menu-text">Завершить</span>
           </Button>
         )}
         <Button type="text" size="small" onClick={onRename} className="stage-dropdown-menu-item">
-          <Icon16Pencil className="stage-dropdown-menu-icon" />
+          <Icon name="pencil" size={16} className="stage-dropdown-menu-icon" />
           <span className="stage-dropdown-menu-text">Переименовать</span>
         </Button>
         {/* Временно отключено: постановка этапа на паузу
         {!isCompleted && (
           <Button type="text" size="small" onClick={onPause} className="stage-dropdown-menu-item">
-            <Icon16Pause className="stage-dropdown-menu-icon" />
+            <Icon name="pause" size={16} className="stage-dropdown-menu-icon" />
             <span className="stage-dropdown-menu-text">Пауза</span>
           </Button>
         )} */}
@@ -75,7 +71,7 @@ export const StageDropdownMenu: React.FC<StageDropdownMenuProps> = ({
       <div className="stage-dropdown-menu-divider" />
       <div className="stage-dropdown-menu-danger">
         <Button type="text" size="small" onClick={onDelete} className="stage-dropdown-menu-item stage-dropdown-menu-item-danger">
-          <Icon16Trash className="stage-dropdown-menu-icon" />
+          <Icon name="trash" size={16} className="stage-dropdown-menu-icon" />
           <span className="stage-dropdown-menu-text">Удалить</span>
         </Button>
       </div>

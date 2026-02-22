@@ -5,8 +5,7 @@ import { KaitenConnectForm } from './KaitenConnectForm'
 import { StageListItem } from './StageListItem'
 import { Button } from '../common/Button'
 import { Input } from '../common/Input'
-import { Icon16Link } from '../common/icons/Icon16Link'
-import { Icon16Reload } from '../common/icons/Icon16Reload'
+import { Icon } from '../ui/Icon'
 import './KaitenImportModal.css'
 
 interface KaitenImportModalProps {
@@ -264,7 +263,7 @@ export const KaitenImportModal: React.FC<KaitenImportModalProps> = ({
               className="kaiten-import-modal-stages-button"
               data-node-id="247:1616"
             >
-              <Icon16Link />
+              <Icon name="link" size={16} />
               <span>Привязать</span>
             </Button>
           )}

@@ -57,10 +57,12 @@
   height: 16px;
 }
 
-/* Иконка trash — content/error (красный) */
+/* Иконка — content/error (danger) */
 .dashboard-actions-dropdown-item-danger .dashboard-actions-dropdown-icon img,
+.dashboard-actions-dropdown-item-danger .dashboard-actions-dropdown-icon svg,
+.dashboard-actions-dropdown-item-danger .dashboard-actions-dropdown-icon path,
 .dashboard-actions-dropdown-item-danger [class*="icon-16-trash"] img {
-  filter: brightness(0) saturate(100%) invert(27%) sepia(99%) saturate(5000%) hue-rotate(355deg);
+  fill: var(--content-error) !important;
 }
 
 .dashboard-actions-dropdown-text {

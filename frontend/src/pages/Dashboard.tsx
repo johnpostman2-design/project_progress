@@ -14,8 +14,7 @@ import { KaitenImportModal } from '../components/kaiten/KaitenImportModal'
 import { StagePauseModal } from '../components/stages/StagePauseModal'
 import { LoadingSpinner } from '../components/common/LoadingSpinner'
 import { Button } from '../components/common/Button'
-import { Icon16Plus } from '../components/common/icons/Icon16Plus'
-import { Icon16Kebab } from '../components/common/icons/Icon16Kebab'
+import { Icon } from '../components/ui/Icon'
 import { DashboardActionsDropdown } from '../components/dashboard/DashboardActionsDropdown'
 import { ProgressBar } from '../components/timeline/ProgressBar'
 import { createProject, createStage, updateProject, getProject, deleteAllProjects, deleteProject, updateStage, deleteStage, getStages } from '../services/supabase/supabaseService'
@@ -350,7 +349,7 @@ export const Dashboard: React.FC = () => {
                   onClick={() => setShowActionsDropdown(!showActionsDropdown)}
                   className="button-icon-only"
                 >
-                  <Icon16Kebab />
+                  <Icon name="kebab" size={16} />
                 </Button>
                 {showActionsDropdown && (
                   <DashboardActionsDropdown
@@ -400,7 +399,7 @@ export const Dashboard: React.FC = () => {
                 size="small"
                 onClick={() => setShowImportModal(true)}
               >
-                <Icon16Plus />
+                <Icon name="plus" size={16} />
               </Button>
             </div>
           </div>

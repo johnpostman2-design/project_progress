@@ -59,8 +59,10 @@
 }
 
 .project-dropdown-menu-item-danger .project-dropdown-menu-icon img,
-.project-dropdown-menu-item-danger .project-dropdown-menu-icon [class*="icon-16-trash"] img {
-  filter: brightness(0) saturate(100%) invert(27%) sepia(99%) saturate(5000%) hue-rotate(355deg);
+.project-dropdown-menu-item-danger .project-dropdown-menu-icon [class*="icon-16-trash"] img,
+.project-dropdown-menu-item-danger .project-dropdown-menu-icon svg,
+.project-dropdown-menu-item-danger .project-dropdown-menu-icon path {
+  fill: var(--content-error, red) !important;
 }
 
 .project-dropdown-menu-icon {

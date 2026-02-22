@@ -23,3 +23,13 @@
   min-height: 100vh;
   z-index: 9999;
 }
+
+.loading-spinner .icon-spin {
+  animation: icon-spin 0.8s linear infinite;
+}
+
+@keyframes icon-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

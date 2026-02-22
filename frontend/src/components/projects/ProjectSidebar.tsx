@@ -3,10 +3,7 @@ import { Project } from '../../models/project'
 import { Stage } from '../../models/stage'
 import { Task, sortTasksForDisplay } from '../../models/task'
 import { formatDateDisplay, timestampToDate } from '../../utils/dateUtils'
-import { Icon24Kebab } from '../common/icons/Icon24Kebab'
-import { Icon16Kebab } from '../common/icons/Icon16Kebab'
-import { Icon16Check } from '../common/icons/Icon16Check'
-import { Icon16ArrowRight } from '../common/icons/Icon16ArrowRight'
+import { Icon } from '../ui/Icon'
 import { ProjectDropdownMenu } from './ProjectDropdownMenu'
 import { StageDropdownMenu } from '../stages/StageDropdownMenu'
 import { EditableName } from '../common/EditableName'
@@ -276,7 +273,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                 <div className="project-sidebar-kebab-container">
                   <div className="project-sidebar-kebab-button-wrap" onMouseDown={(e) => { e.preventDefault(); e.stopPropagation() }}>
                     <Button type="text" size="medium" className="project-sidebar-kebab-button" onClick={() => setShowStageDetailsKebab(!showStageDetailsKebab)}>
-                      <Icon24Kebab />
+                      <Icon name="kebab" size={24} />
                     </Button>
                   </div>
                   {showStageDetailsKebab && (
@@ -324,7 +321,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                 ) : (
                   sortTasksForDisplay(stageTasks).map((task) => (
                     <li key={task.id} className={`project-sidebar-stage-task-item${task.isCompleted ? ' completed' : ''}`}>
-                      <span className="project-sidebar-stage-task-icon"><Icon16Check /></span>
+                      <span className="project-sidebar-stage-task-icon"><Icon name="check" size={16} /></span>
                       <span className="project-sidebar-stage-task-title">{task.title}</span>
                     </li>
                   ))
@@ -359,7 +356,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                   className="project-sidebar-kebab-button"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
-                  <Icon24Kebab />
+                  <Icon name="kebab" size={24} />
                 </Button>
               </div>
               {showDropdown && (
@@ -490,7 +487,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                               className="project-sidebar-stage-kebab-button"
                               onClick={() => setStageDropdownId(stageDropdownId === stage.id ? null : stage.id)}
                             >
-                              <Icon16Kebab />
+                              <Icon name="kebab" size={16} />
                             </Button>
                           </div>
                           {stageDropdownId === stage.id && (
@@ -566,7 +563,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                             {formatDate(stage.startDate)}
                           </button>
                           <div className="project-sidebar-stage-arrow">
-                            <Icon16ArrowRight className="project-sidebar-stage-arrow-icon" />
+                            <Icon name="arrow-right" size={16} className="project-sidebar-stage-arrow-icon" />
                           </div>
                           <input
                             ref={(el) => { endDateInputRefs.current[stage.id] = el }}

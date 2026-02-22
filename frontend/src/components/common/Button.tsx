@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon16Loading } from './icons/Icon16Loading'
+import { Icon } from '../ui/Icon'
 import './Button.css'
 
 interface ButtonProps {
@@ -41,7 +41,7 @@ export const Button: React.FC<ButtonProps> = ({
           <span className="button-loading-placeholder" aria-hidden>
             {children}
           </span>
-          <Icon16Loading className="button-loading-icon" />
+          <Icon name="loading" size={16} className="button-loading-icon icon-spin" />
         </>
       ) : (
         children

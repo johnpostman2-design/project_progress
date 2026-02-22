@@ -14,7 +14,7 @@ import { useKaitenSync } from '../hooks/useKaitenSync'
 import { KaitenConfig } from '../services/kaiten/kaitenTypes'
 import { DeleteToast, type DeleteToastRef } from '../components/common/DeleteToast'
 import { Button } from '../components/common/Button'
-import { Icon16ArrowLeft } from '../components/common/icons/Icon16ArrowLeft'
+import { Icon } from '../components/ui/Icon'
 import './Archive.css'
 
 export const Archive: React.FC = () => {
@@ -132,7 +132,7 @@ export const Archive: React.FC = () => {
             onClick={() => navigate('/dashboard')}
             className="archive-header-back"
           >
-            <Icon16ArrowLeft className="archive-header-back-icon" />
+            <Icon name="arrow-left" size={16} className="archive-header-back-icon" />
           </Button>
           <h1 className="archive-header-title">Архив</h1>
         </div>

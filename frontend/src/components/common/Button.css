@@ -23,7 +23,8 @@
 }
 
 /* Иконки внутри primary — content/invert (белые) */
-.button-primary img {
+.button-primary img,
+.button-primary svg {
   filter: brightness(0) invert(1);
 }
 
@@ -252,6 +253,19 @@
   top: 50%;
   transform: translate(-50%, -50%);
   flex-shrink: 0;
+}
+
+.button-loading .button-loading-icon.icon-spin {
+  animation: button-icon-spin 0.8s linear infinite;
+}
+
+@keyframes button-icon-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 /* Иконки внутри кнопок - предотвращение сжатия (все размеры) */

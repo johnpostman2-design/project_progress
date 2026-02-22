@@ -59,8 +59,9 @@
 }
 
 .stage-dropdown-menu-item-danger .stage-dropdown-menu-icon img,
-.stage-dropdown-menu-item-danger .stage-dropdown-menu-icon [class*="icon-16-trash"] img {
-  filter: brightness(0) saturate(100%) invert(27%) sepia(99%) saturate(5000%) hue-rotate(355deg);
+.stage-dropdown-menu-item-danger .stage-dropdown-menu-icon svg,
+.stage-dropdown-menu-item-danger .stage-dropdown-menu-icon path {
+  fill: var(--content-error, red) !important;
 }
 
 .stage-dropdown-menu-icon {

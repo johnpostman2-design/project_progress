@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import { Icon16Cloud } from '../common/icons/Icon16Cloud'
-import { Icon16Trash } from '../common/icons/Icon16Trash'
+import { Icon } from '../ui/Icon'
 import { Button } from '../common/Button'
 import './DashboardActionsDropdown.css'
 
@@ -44,7 +43,7 @@ export const DashboardActionsDropdown: React.FC<DashboardActionsDropdownProps> =
           onClick={onTestProject}
           className="dashboard-actions-dropdown-item"
         >
-          <Icon16Cloud className="dashboard-actions-dropdown-icon" />
+          <Icon name="cloud" size={16} className="dashboard-actions-dropdown-icon" />
           <span className="dashboard-actions-dropdown-text">Тест проект</span>
         </Button>
       </div>
@@ -58,7 +57,7 @@ export const DashboardActionsDropdown: React.FC<DashboardActionsDropdownProps> =
           onClick={onDeleteAll}
           className="dashboard-actions-dropdown-item dashboard-actions-dropdown-item-danger"
         >
-          <Icon16Trash className="dashboard-actions-dropdown-icon" />
+          <Icon name="trash" size={16} className="dashboard-actions-dropdown-icon" />
           <span className="dashboard-actions-dropdown-text">Удалить все</span>
         </Button>
       </div>

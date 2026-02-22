@@ -1,6 +1,6 @@
 import React from 'react'
 import { KaitenGroup } from '../../services/kaiten/kaitenTypes'
-import { Icon24Link } from '../common/icons/Icon24Link'
+import { Icon } from '../ui/Icon'
 import { Button } from '../common/Button'
 import './KaitenStagePreview.css'
 
