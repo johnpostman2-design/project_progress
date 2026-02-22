@@ -25,7 +25,7 @@ git push -u origin main
 
 1. Зайдите на [vercel.com](https://vercel.com), войдите через GitHub.
 2. **Add New** → **Project** → выберите репозиторий `project-progress`.
-3. **Root Directory:** нажмите **Edit** и укажите `frontend` (так Vercel будет собирать именно фронтенд). Build Command и Output Directory подставятся автоматически (`npm run build`, `dist`).
+3. **Root Directory:** в настройках сборки (при создании или в **Settings** → **Build and Deployment**) укажите `frontend`. Build Command и Output Directory подставятся из `frontend/vercel.json` (`npm run build`, `dist`).
 4. **Environment Variables** добавьте:
    - `VITE_SUPABASE_URL` — URL проекта Supabase
    - `VITE_SUPABASE_ANON_KEY` — anon key из Supabase
@@ -33,9 +33,10 @@ git push -u origin main
 
 После деплоя Vercel даст ссылку вида `https://project-progress-xxx.vercel.app`. Домен можно сменить в настройках проекта.
 
-**Если сайт не открывается (404 или белый экран):**
-- **Root Directory:** в настройках проекта (Settings → General) укажите `frontend` **или** оставьте корень репозитория — в корне добавлен `vercel.json`, который сам запускает сборку из папки `frontend`.
-- **Environment Variables:** в Settings → Environment Variables добавьте `VITE_SUPABASE_URL` и `VITE_SUPABASE_ANON_KEY` (без них приложение упадёт с ошибкой при загрузке). После добавления нажмите **Redeploy** в Deployments.
+**Если сайт не открывается (404 NOT_FOUND или белый экран):**
+1. **Root Directory:** в Vercel → проект → **Settings** → раздел **Build and Deployment** (или **Git**) — найдите **Root Directory**, укажите **`frontend`**. Тогда Vercel будет использовать `frontend/vercel.json`: сборка `npm run build`, выход в `dist`, rewrites для SPA. Сохраните и сделайте **Redeploy**.
+2. Проверьте **Deployments** → последний деплой: статус должен быть **Ready** (Build успешен). Если Build с ошибкой — откройте лог и исправьте ошибку.
+3. **Environment Variables:** в Settings → Environment Variables добавьте `VITE_SUPABASE_URL` и `VITE_SUPABASE_ANON_KEY`. После изменений — **Redeploy**.
 
 ### Вариант B: Netlify
 

@@ -15,13 +15,8 @@ const RETRY_DELAY = 1000 // ms
 
 // Get base URL from config
 const getBaseUrl = (config: KaitenConfig): string => {
-  // В режиме разработки используем прокси Vite для обхода CORS
-  if (import.meta.env.DEV) {
-    // Используем прокси только если baseUrl не указан явно
-    return config.baseUrl || `/api/kaiten`
-  }
-  // В продакшене используем прямой URL
-  return config.baseUrl || `https://${config.domain}.kaiten.ru/api/v1`
+  // Всегда используем относительный путь /api/kaiten: в dev — прокси Vite, на проде — серверный прокси Vercel (обход CORS)
+  return config.baseUrl || `/api/kaiten`
 }
 
 // Retry wrapper for API calls
@@ -91,7 +86,8 @@ const apiRequest = async <T>(
       headers['Content-Type'] = 'application/json'
     }
     
-    if (import.meta.env.DEV && fullUrl.startsWith('/api/kaiten')) {
+    // Прокси (Vite в dev, Vercel на проде) использует домен для запроса к Kaiten
+    if (fullUrl.startsWith('/api/kaiten')) {
       headers['X-Kaiten-Domain'] = config.domain
     }
     
