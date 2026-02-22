@@ -33,6 +33,10 @@ git push -u origin main
 
 После деплоя Vercel даст ссылку вида `https://project-progress-xxx.vercel.app`. Домен можно сменить в настройках проекта.
 
+**Если сайт не открывается (404 или белый экран):**
+- **Root Directory:** в настройках проекта (Settings → General) укажите `frontend` **или** оставьте корень репозитория — в корне добавлен `vercel.json`, который сам запускает сборку из папки `frontend`.
+- **Environment Variables:** в Settings → Environment Variables добавьте `VITE_SUPABASE_URL` и `VITE_SUPABASE_ANON_KEY` (без них приложение упадёт с ошибкой при загрузке). После добавления нажмите **Redeploy** в Deployments.
+
 ### Вариант B: Netlify
 
 1. Зайдите на [netlify.com](https://netlify.com), войдите через GitHub.

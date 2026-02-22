@@ -28,7 +28,10 @@ const ensureInitialized = (): void => {
   }
 
   if (!supabaseConfig.supabaseUrl || !supabaseConfig.supabaseAnonKey) {
-    throw new Error('Supabase config is missing. Check your .env file.')
+    const hint = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+      ? ' Добавьте VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY в Environment Variables на Vercel (Project → Settings → Environment Variables) и переразверните.'
+      : ' Проверьте файл .env в папке frontend.'
+    throw new Error('Supabase config is missing.' + hint)
   }
 
   // Синхронная инициализация для немедленного использования
