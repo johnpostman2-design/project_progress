@@ -10,7 +10,8 @@ export default async function handler(req: { method?: string; headers: Record<st
     return res.status(204).end()
   }
 
-  const domain = (Array.isArray(req.headers['x-kaiten-domain']) ? req.headers['x-kaiten-domain'][0] : req.headers['x-kaiten-domain']) as string || 'onyagency'
+  let domain = (Array.isArray(req.headers['x-kaiten-domain']) ? req.headers['x-kaiten-domain'][0] : req.headers['x-kaiten-domain']) as string || 'onyagency'
+  domain = (domain || '').trim().replace(/\.kaiten\.ru$/i, '').split('.')[0] || 'onyagency'
   const auth = (Array.isArray(req.headers['authorization']) ? req.headers['authorization'][0] : req.headers['authorization']) as string
   if (!auth) {
     return res.status(401).json({ error: 'Missing Authorization header' })

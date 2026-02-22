@@ -92,9 +92,10 @@ const apiRequest = async <T>(
       headers['Content-Type'] = 'application/json'
     }
     
-    // Прокси (Vite в dev, Vercel на проде) использует домен для запроса к Kaiten
+    // Прокси использует домен для запроса к Kaiten; всегда только поддомен (onyagency), без .kaiten.ru
     if (fullUrl.startsWith('/api/kaiten')) {
-      headers['X-Kaiten-Domain'] = config.domain
+      const subdomain = (config.domain || '').trim().replace(/\.kaiten\.ru$/i, '').split('.')[0]
+      headers['X-Kaiten-Domain'] = subdomain || config.domain || 'onyagency'
     }
     
     // Явно указываем метод GET, если не указан другой

@@ -12,7 +12,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(204).end()
   }
 
-  const domain = (req.headers['x-kaiten-domain'] as string) || 'onyagency'
+  let domain = (req.headers['x-kaiten-domain'] as string) || 'onyagency'
+  domain = (domain || '').trim().replace(/\.kaiten\.ru$/i, '').split('.')[0] || 'onyagency'
   const auth = req.headers['authorization'] as string
   if (!auth) {
     return res.status(401).json({ error: 'Missing Authorization header' })
