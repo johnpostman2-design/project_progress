@@ -1,0 +1,36 @@
+/* Icon icon/loading from Figma UI kit - node-id: 287:4019 */
+
+.icon-16-loading {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  transform: scale(1);
+  transition: transform 0.2s;
+}
+
+.icon-16-loading-size {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-16-loading-svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  color: inherit;
+}
+
+/* Крутящаяся иконка загрузки */
+.icon-16-loading.icon-16-loading-spin .icon-16-loading-size {
+  animation: icon-16-loading-spin 0.8s linear infinite;
+}
+
+@keyframes icon-16-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

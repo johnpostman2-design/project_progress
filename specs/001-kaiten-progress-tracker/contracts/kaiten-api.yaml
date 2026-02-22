@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: Kaiten API Integration
+  description: Контракты для интеграции с Kaiten API (read-only)
+  version: 1.0.0
+
+servers:
+  - url: https://{domain}.kaiten.ru/api/v1
+    description: Kaiten API server
+    variables:
+      domain:
+        default: example
+
+security:
+  - BearerAuth: []
+
+paths:
+  /boards:
+    get:
+      summary: Получить список досок
+      operationId: getBoards
+      tags:
+        - Boards
+      responses:
+        '200':
+          description: Список досок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Board'
+        '401':
+          description: Неавторизован
+        '500':
+          description: Ошибка сервера
+
+  /boards/{boardId}/groups:
+    get:
+      summary: Получить группы (этапы) доски
+      operationId: getBoardGroups
+      tags:
+        - Groups
+      parameters:
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список групп
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+        '404':
+          description: Доска не найдена
+        '401':
+          description: Неавторизован
+
+  /cards:
+    get:
+      summary: Получить задачи (cards)
+      operationId: getCards
+      tags:
+        - Cards
+      parameters:
+        - name: board_id
+          in: query
+          schema:
+            type: integer
+        - name: group_id
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Список задач
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Card'
+                  total:
+                    type: integer
+        '401':
+          description: Неавторизован
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Board:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          description: ID доски
+        name:
+          type: string
+          description: Название доски
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Group:
+      type: object
+      required:
+        - id
+        - name
+        - board_id
+      properties:
+        id:
+          type: integer
+          description: ID группы (этапа)
+        name:
+          type: string
+          description: Название группы
+        board_id:
+          type: integer
+          description: ID доски
+        position:
+          type: integer
+          description: Позиция в доске
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Card:
+      type: object
+      required:
+        - id
+        - title
+        - status
+        - group_id
+        - board_id
+      properties:
+        id:
+          type: integer
+          description: ID задачи
+        title:
+          type: string
+          description: Название задачи
+        status:
+          type: object
+          description: Статус задачи
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            is_closed:
+              type: boolean
+              description: Закрыта ли задача
+        group_id:
+          type: integer
+          description: ID группы (этапа)
+        board_id:
+          type: integer
+          description: ID доски
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

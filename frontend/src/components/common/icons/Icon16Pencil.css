@@ -1,0 +1,28 @@
+/* Icon icon/pencil, edit from Figma UI kit - node-id: 287:4048 */
+
+.icon-16-pencil {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  transform: scale(1);
+  transition: transform 0.2s;
+}
+
+.icon-16-pencil-size {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.icon-16-pencil-size {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-16-pencil-svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  color: inherit;
+}

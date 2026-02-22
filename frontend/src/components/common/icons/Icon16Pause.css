@@ -1,0 +1,30 @@
+/* Icon 24/pause from Figma UI kit - node-id: 287:4026 */
+
+.icon-16-pause {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  transform: scale(1);
+  transition: transform 0.2s;
+}
+
+.icon-16-pause-size {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.icon-16-pause-bar {
+  position: absolute;
+  background: var(--content-primary, black);
+  border-radius: var(--radius-xs, 2px);
+  transform: scale(1);
+}
+
+.icon-16-pause-bar-left {
+  inset: 16.67% 58.33% 16.67% 20.83%;
+}
+
+.icon-16-pause-bar-right {
+  inset: 16.67% 20.83% 16.67% 58.33%;
+}

@@ -1,0 +1,43 @@
+/* Toast в левом нижнем углу, 20px отступ */
+.delete-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12, 12px);
+  padding: var(--spacing-12, 12px) var(--spacing-16, 16px);
+  background: var(--surface-primary-main);
+  border: 1px solid var(--content-tertiary);
+  border-radius: var(--radius-m, 8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 2000;
+}
+
+.delete-toast-message {
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-label-small);
+  color: var(--content-primary);
+}
+
+.delete-toast-progress-wrap {
+  flex-shrink: 0;
+}
+
+.delete-toast-progress {
+  width: 28px;
+  height: 28px;
+}
+
+.delete-toast-progress-bg {
+  stroke: var(--content-disabled);
+}
+
+.delete-toast-progress-fill {
+  stroke: var(--content-primary);
+}
+
+.delete-toast-undo {
+  flex-shrink: 0;
+}

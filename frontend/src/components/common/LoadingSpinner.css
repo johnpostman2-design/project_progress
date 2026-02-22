@@ -1,0 +1,25 @@
+/* Спиннер с icon/loading — по центру страницы */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: var(--surface-primary-main);
+}
+
+.loading-spinner-small {
+  min-height: 80px;
+  padding: var(--spacing-16);
+}
+
+.loading-spinner-medium {
+  min-height: 200px;
+}
+
+/* При перезагрузке страницы — по центру экрана */
+.loading-spinner-large {
+  position: fixed;
+  inset: 0;
+  min-height: 100vh;
+  z-index: 9999;
+}

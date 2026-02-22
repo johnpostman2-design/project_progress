@@ -1,0 +1,262 @@
+/* Button component styles from Figma UI kit - node-id: 1-8 */
+
+/* Base button styles */
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-8, 8px);
+  border-radius: var(--radius-s, 4px);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-weight: 400;
+  letter-spacing: 0px;
+  box-sizing: border-box;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Primary button - default state */
+.button-primary.button-default {
+  background: var(--surface-primary-invert-main, black);
+  color: var(--content-invert, white);
+}
+
+/* Иконки внутри primary — content/invert (белые) */
+.button-primary img {
+  filter: brightness(0) invert(1);
+}
+
+/* Primary button - hover state */
+.button-primary.button-hover,
+.button-primary:hover:not(:disabled) {
+  background: var(--surface-primary-invert-hover, rgba(0, 0, 0, 0.6));
+  color: var(--content-invert, white);
+}
+
+/* Primary button - disabled state */
+.button-primary.button-disabled,
+.button-primary:disabled {
+  background: var(--surface-primary-invert-disabled, rgba(0, 0, 0, 0.04));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+/* Backless button - default state */
+.button-backless.button-default {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+/* Backless button - hover state */
+.button-backless.button-hover,
+.button-backless:hover:not(:disabled) {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+/* Backless button - disabled state */
+.button-backless.button-disabled,
+.button-backless:disabled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-disabled, rgba(0, 0, 0, 0.04));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+/* Text button - default state */
+.button-text.button-default {
+  background: var(--surface-primary-main, white);
+  border: none;
+  color: var(--content-primary, black);
+}
+
+/* Text button - hover state */
+.button-text.button-hover,
+.button-text:hover:not(:disabled) {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+  border: none;
+  color: var(--content-primary, black);
+}
+
+/* Text button - active (pressed) state */
+.button-text:active:not(:disabled) {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+  border: none;
+  color: var(--content-primary, black);
+}
+
+/* Text button - focus-visible state */
+.button-text:focus-visible {
+  outline: 2px solid var(--content-primary, black);
+  outline-offset: 2px;
+}
+
+/* Text button - disabled state */
+.button-text.button-disabled,
+.button-text:disabled {
+  background: var(--surface-secondary-disabled, rgba(0, 0, 0, 0.04));
+  border: none;
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+/* Button sizes */
+.button-small {
+  padding: var(--spacing-8, 8px) var(--spacing-8, 8px);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  height: 32px;
+  box-sizing: border-box;
+}
+
+/* Square icon button - 32x32px (только для иконок без текста) */
+.button-small.button-backless.button-icon-only,
+.button-small.button-secondary.button-icon-only,
+.button-small.button-primary.button-icon-only {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Для кнопок с текстом - используем стандартные размеры */
+.button-small.button-backless:not(.button-icon-only) {
+  /* Размеры наследуются от .button-small */
+}
+
+.button-medium {
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  font-size: var(--font-size-p2, 17px);
+  line-height: var(--line-height-p2, 24px);
+  min-height: 40px;
+}
+
+.button-large {
+  padding: var(--spacing-12, 12px) var(--spacing-16, 16px);
+  font-size: var(--font-size-label-large, 20px);
+  line-height: var(--line-height-label-large, 32px);
+  min-height: 48px;
+}
+
+/* Secondary button styles (если используется) */
+.button-secondary.button-default {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+.button-secondary.button-hover,
+.button-secondary:hover:not(:disabled) {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+.button-secondary.button-disabled,
+.button-secondary:disabled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-disabled, rgba(0, 0, 0, 0.04));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+.button-secondary:focus-visible {
+  outline: 2px solid var(--content-primary);
+  outline-offset: 2px;
+}
+
+.button-primary:focus-visible {
+  outline: 2px solid var(--content-invert);
+  outline-offset: 2px;
+}
+
+/* Success button styles */
+.button-success.button-default {
+  background: var(--surface-primary-invert-main, black);
+  color: var(--content-invert, white);
+}
+
+.button-success.button-hover,
+.button-success:hover:not(:disabled) {
+  background: var(--surface-primary-invert-hover, rgba(0, 0, 0, 0.6));
+  color: var(--content-invert, white);
+}
+
+.button-success.button-disabled,
+.button-success:disabled {
+  background: var(--surface-primary-invert-disabled, rgba(0, 0, 0, 0.04));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+/* Danger button styles */
+.button-danger.button-default {
+  background: var(--surface-primary-invert-main, black);
+  color: var(--content-invert, white);
+}
+
+.button-danger.button-hover,
+.button-danger:hover:not(:disabled) {
+  background: var(--surface-primary-invert-hover, rgba(0, 0, 0, 0.6));
+  color: var(--content-invert, white);
+}
+
+.button-danger.button-disabled,
+.button-danger:disabled {
+  background: var(--surface-primary-invert-disabled, rgba(0, 0, 0, 0.04));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+/* Caution button styles */
+.button-caution.button-default {
+  background: var(--surface-primary-invert-main, black);
+  color: var(--content-invert, white);
+}
+
+.button-caution.button-hover,
+.button-caution:hover:not(:disabled) {
+  background: var(--surface-primary-invert-hover, rgba(0, 0, 0, 0.6));
+  color: var(--content-invert, white);
+}
+
+.button-caution.button-disabled,
+.button-caution:disabled {
+  background: var(--surface-primary-invert-disabled, rgba(0, 0, 0, 0.04));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+/* Loading state — ширина кнопки не меняется: контент скрыт, поверх по центру спиннер */
+.button-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.button-loading .button-loading-placeholder {
+  visibility: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: inherit;
+}
+
+.button-loading .button-loading-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  flex-shrink: 0;
+}
+
+/* Иконки внутри кнопок - предотвращение сжатия (все размеры) */
+.button [class^="icon-16-"],
+.button [class^="icon-24-"],
+.button [class^="icon-32-"] {
+  flex-shrink: 0;
+}

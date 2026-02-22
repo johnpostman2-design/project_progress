@@ -1,0 +1,114 @@
+/* KaitenConnectForm component styles */
+
+.kaiten-connect-form {
+  position: relative;
+  background: var(--surface-primary-main, white);
+  border-left: 1px solid var(--content-disabled, rgba(0, 0, 0, 0.08));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: var(--spacing-24, 24px) 0 0 0;
+  width: 296px;
+  height: 100%;
+}
+
+.kaiten-connect-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.kaiten-connect-form-title {
+  font-family: var(--font-family);
+  font-size: var(--font-size-p2, 17px);
+  line-height: var(--line-height-p2, 24px);
+  font-weight: 400;
+  color: var(--content-primary, black);
+  margin: 0;
+  width: 100%;
+  padding: 0 var(--spacing-20, 20px) var(--spacing-24, 24px) var(--spacing-20, 20px);
+}
+
+.kaiten-connect-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24, 24px);
+  padding: 0 var(--spacing-20, 20px) var(--spacing-24, 24px) var(--spacing-20, 20px);
+  width: 100%;
+}
+
+.kaiten-connect-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8, 8px);
+  width: 100%;
+}
+
+.kaiten-connect-form-label {
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  font-weight: 400;
+  color: var(--content-primary, black);
+}
+
+.kaiten-connect-form-hint {
+  font-family: var(--font-family);
+  font-size: var(--font-size-caption, 12px);
+  line-height: var(--line-height-caption, 14px);
+  font-weight: 400;
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+  margin: 0;
+}
+
+.kaiten-connect-form-error {
+  color: var(--content-error, red);
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  padding: var(--spacing-8, 8px);
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+  border-radius: var(--radius-s, 4px);
+}
+
+.kaiten-connect-form-footer {
+  display: flex;
+  gap: var(--spacing-8, 8px);
+  align-items: center;
+  padding-top: var(--spacing-32, 32px);
+  border-top: 1px solid var(--content-disabled, rgba(0, 0, 0, 0.08));
+  width: 100%;
+}
+
+.kaiten-connect-form-footer .button {
+  flex: 1 0 0;
+}
+
+.kaiten-connect-form-load-boards-button {
+  margin-top: var(--spacing-8, 8px);
+  width: 100%;
+}
+
+.kaiten-connect-form-board-select {
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  border: 1px solid var(--border-tertiary, rgba(0, 0, 0, 0.16));
+  border-radius: var(--radius-s, 4px);
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  color: var(--content-primary, black);
+  background: var(--surface-primary-main, white);
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.kaiten-connect-form-board-select:focus {
+  outline: none;
+  border-color: var(--border-secondary, rgba(0, 0, 0, 0.32));
+}
+
+.kaiten-connect-form-board-select:hover {
+  border-color: var(--border-secondary, rgba(0, 0, 0, 0.32));
+}

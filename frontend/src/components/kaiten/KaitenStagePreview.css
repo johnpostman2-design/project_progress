@@ -1,0 +1,49 @@
+/* KaitenStagePreview component styles */
+
+.kaiten-stage-preview {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8, 8px);
+}
+
+.kaiten-stage-preview-loading {
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  color: var(--content-secondary, rgba(0, 0, 0, 0.6));
+  padding: var(--spacing-8, 8px);
+}
+
+.kaiten-stage-preview-item {
+  display: flex;
+  align-items: center;
+}
+
+.kaiten-stage-preview-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8, 8px);
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  color: var(--content-primary, black);
+  cursor: pointer;
+}
+
+.kaiten-stage-preview-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.kaiten-stage-preview-button {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.kaiten-stage-preview-button > span {
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  color: var(--content-primary, black);
+}

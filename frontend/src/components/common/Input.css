@@ -1,0 +1,208 @@
+/* Input component styles from Figma UI kit - node-id: 227-214 */
+
+/* Обертка используется только для структуры (flex контейнер для input и ошибки) */
+/* В Figma обертка не имеет визуальных стилей - все стили применяются к самому input */
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+/* Base input styles */
+.input {
+  width: 100%;
+  border-radius: var(--radius-s, 4px);
+  border: none;
+  outline: none;
+  font-family: var(--font-family);
+  font-weight: 400;
+  letter-spacing: 0px;
+  box-sizing: border-box;
+  transition: background-color 0.2s, border-color 0.2s, background-image 0.2s;
+}
+
+/* Input sizes */
+.input-small {
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  min-height: 32px;
+}
+
+.input-medium {
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  font-size: var(--font-size-p2, 17px);
+  line-height: var(--line-height-p2, 24px);
+  min-height: 40px;
+}
+
+/* Backless input - default state */
+.input-backless.input-default {
+  background: var(--surface-primary-main, white);
+  border: none;
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+.input-backless.input-default::placeholder {
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+/* Backless input - hover state */
+.input-backless.input-hover,
+.input-backless:hover:not(:disabled):not(:focus) {
+  background: var(--surface-primary-main, white);
+  background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.08) 100%),
+    linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+.input-backless.input-hover::placeholder,
+.input-backless:hover:not(:disabled):not(:focus)::placeholder {
+  color: var(--content-primary, black);
+}
+
+/* Backless input - focus state */
+.input-backless.input-focus,
+.input-backless:focus {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+.input-backless.input-focus::placeholder,
+.input-backless:focus::placeholder {
+  color: var(--content-primary, black);
+}
+
+/* Backless input - filled state */
+.input-backless.input-filled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+/* Backless input - filled hover state */
+.input-backless.input-filled-hover {
+  background: var(--surface-primary-main, white);
+  background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.08) 100%),
+    linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+/* Backless input - disabled state */
+.input-backless.input-disabled,
+.input-backless:disabled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--content-disabled, rgba(0, 0, 0, 0.08));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+.input-backless.input-disabled::placeholder,
+.input-backless:disabled::placeholder {
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+}
+
+/* Primary input - default state */
+.input-primary.input-default {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-tertiary, rgba(0, 0, 0, 0.16));
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+.input-primary.input-default::placeholder {
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+/* Primary input - hover state */
+.input-primary.input-hover,
+.input-primary:hover:not(:disabled):not(:focus) {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+.input-primary.input-hover::placeholder,
+.input-primary:hover:not(:disabled):not(:focus)::placeholder {
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+/* Primary input - focus state */
+.input-primary.input-focus,
+.input-primary:focus {
+  background: var(--surface-primary-main, white) !important;
+  background-image: none !important;
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32)) !important;
+  color: var(--content-primary, black) !important;
+}
+
+.input-primary.input-focus::placeholder,
+.input-primary:focus::placeholder {
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32)) !important;
+}
+
+/* Primary input - filled state */
+.input-primary.input-filled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-tertiary, rgba(0, 0, 0, 0.16));
+  color: var(--content-primary, black);
+  background-image: none;
+}
+
+/* Primary input - filled hover state */
+.input-primary.input-filled-hover {
+  background: var(--surface-primary-main, white) !important;
+  background-image: none !important;
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32)) !important;
+  color: var(--content-primary, black) !important;
+}
+
+/* Primary input - disabled state */
+.input-primary.input-disabled,
+.input-primary:disabled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--content-disabled, rgba(0, 0, 0, 0.08));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+.input-primary.input-disabled::placeholder,
+.input-primary:disabled::placeholder {
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+}
+
+/* Invalid state */
+.input-invalid {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-error, rgba(255, 0, 0, 0.4));
+  color: var(--content-primary, black);
+}
+
+.input-error {
+  font-family: var(--font-family);
+  font-size: var(--font-size-caption, 12px);
+  line-height: var(--line-height-caption, 14px);
+  font-weight: 400;
+  color: var(--content-error, red);
+  margin-top: var(--spacing-4, 4px);
+  letter-spacing: 0px;
+}
+
+/* Иконки внутри инпутов - предотвращение сжатия (все размеры) */
+.input-wrapper [class^="icon-16-"],
+.input-wrapper [class^="icon-24-"],
+.input-wrapper [class^="icon-32-"],
+.input [class^="icon-16-"],
+.input [class^="icon-24-"],
+.input [class^="icon-32-"] {
+  flex-shrink: 0;
+}

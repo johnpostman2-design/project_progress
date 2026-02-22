@@ -1,0 +1,165 @@
+/* DatePicker component styles - использует стили из дизайн-системы Figma */
+
+.date-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8, 8px);
+  width: 100%;
+}
+
+.date-picker-label {
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  font-weight: 400;
+  color: var(--content-primary, black);
+}
+
+.date-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+/* Base date input styles - аналогично Input компоненту */
+.date-picker-input {
+  width: 100%;
+  border-radius: var(--radius-s, 4px);
+  border: none;
+  outline: none;
+  font-family: var(--font-family);
+  font-weight: 400;
+  letter-spacing: 0px;
+  box-sizing: border-box;
+  transition: background-color 0.2s, border-color 0.2s, background-image 0.2s;
+}
+
+/* Input sizes */
+.date-picker-input-small {
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  min-height: 32px;
+}
+
+.date-picker-input-medium {
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  font-size: var(--font-size-p2, 17px);
+  line-height: var(--line-height-p2, 24px);
+  min-height: 40px;
+}
+
+/* Backless date input - default state */
+.date-picker-input-backless.date-picker-input-default {
+  background: var(--surface-primary-main, white);
+  border: none;
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+/* Backless date input - hover state */
+.date-picker-input-backless.date-picker-input-hover,
+.date-picker-input-backless:hover:not(:disabled):not(:focus) {
+  background: var(--surface-primary-main, white);
+  background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.08) 100%),
+    linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+/* Backless date input - focus state */
+.date-picker-input-backless.date-picker-input-focus,
+.date-picker-input-backless:focus {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+/* Backless date input - filled state */
+.date-picker-input-backless.date-picker-input-filled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+/* Backless date input - filled hover state */
+.date-picker-input-backless.date-picker-input-filled-hover {
+  background: var(--surface-primary-main, white);
+  background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.08) 100%),
+    linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-primary, black);
+}
+
+/* Backless date input - disabled state */
+.date-picker-input-backless.date-picker-input-disabled,
+.date-picker-input-backless:disabled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--content-disabled, rgba(0, 0, 0, 0.08));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+/* Primary date input - default state */
+.date-picker-input-primary.date-picker-input-default {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-tertiary, rgba(0, 0, 0, 0.16));
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+/* Primary date input - hover state */
+.date-picker-input-primary.date-picker-input-hover,
+.date-picker-input-primary:hover:not(:disabled):not(:focus) {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+/* Primary date input - focus state */
+.date-picker-input-primary.date-picker-input-focus,
+.date-picker-input-primary:focus {
+  background: var(--surface-primary-main, white) !important;
+  background-image: none !important;
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32)) !important;
+  color: var(--content-primary, black) !important;
+}
+
+/* Primary date input - filled state */
+.date-picker-input-primary.date-picker-input-filled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-tertiary, rgba(0, 0, 0, 0.16));
+  color: var(--content-primary, black);
+  background-image: none;
+}
+
+/* Primary date input - filled hover state */
+.date-picker-input-primary.date-picker-input-filled-hover {
+  background: var(--surface-primary-main, white) !important;
+  background-image: none !important;
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32)) !important;
+  color: var(--content-primary, black) !important;
+}
+
+/* Primary date input - disabled state */
+.date-picker-input-primary.date-picker-input-disabled,
+.date-picker-input-primary:disabled {
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--content-disabled, rgba(0, 0, 0, 0.08));
+  color: var(--content-disabled, rgba(0, 0, 0, 0.08));
+  cursor: not-allowed;
+}
+
+/* Стили для календарной иконки */
+.date-picker-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.date-picker-input:hover:not(:disabled)::-webkit-calendar-picker-indicator {
+  opacity: 1;
+}
+
+.date-picker-input:focus::-webkit-calendar-picker-indicator {
+  opacity: 1;
+}

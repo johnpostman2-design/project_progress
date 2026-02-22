@@ -1,0 +1,77 @@
+.project-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--content-tertiary, rgba(0, 0, 0, 0.32));
+  border-radius: var(--l, 12px);
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  min-width: 172px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-dropdown-menu-primary {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.project-dropdown-menu-danger {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.project-dropdown-menu-divider {
+  border-top: 1px solid var(--content-disabled, rgba(0, 0, 0, 0.08));
+  margin: 4px 0;
+}
+
+.project-dropdown-menu-item {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 4px 8px;
+  height: 32px;
+}
+
+.project-dropdown-menu-item:hover {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+  color: var(--content-primary, black);
+}
+
+/* Действие удаления — красный (перебиваем .button-text) */
+.project-dropdown-menu-item-danger,
+.project-dropdown-menu-item-danger.button-text,
+.project-dropdown-menu-item-danger.button-default {
+  color: var(--content-error, red) !important;
+}
+
+.project-dropdown-menu-item-danger:hover,
+.project-dropdown-menu-item-danger.button-text:hover {
+  background: var(--surface-error-main, rgba(255, 0, 0, 0.08));
+  color: var(--content-error, red) !important;
+}
+
+.project-dropdown-menu-item-danger .project-dropdown-menu-icon img,
+.project-dropdown-menu-item-danger .project-dropdown-menu-icon [class*="icon-16-trash"] img {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(99%) saturate(5000%) hue-rotate(355deg);
+}
+
+.project-dropdown-menu-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.project-dropdown-menu-text {
+  flex: 1 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,28 @@
+/* StageDateButton component - project-specific */
+
+.stage-date-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  background: var(--surface-primary-main, white);
+  border: none;
+  border-radius: var(--s, 4px);
+  width: 61px;
+  font-family: var(--typescale-caption-medium-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-caption-medium-weight, normal);
+  font-size: 12px;
+  line-height: 14px;
+  color: var(--content-secondary, rgba(0, 0, 0, 0.6));
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.stage-date-button:hover {
+  background: var(--surface-secondary-main, rgba(0, 0, 0, 0.04));
+}
+
+.stage-date-button-editing {
+  position: relative;
+  z-index: 100;
+}

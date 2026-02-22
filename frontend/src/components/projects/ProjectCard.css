@@ -1,0 +1,33 @@
+.project-card {
+  display: flex;
+  gap: var(--spacing-20);
+  align-items: flex-start;
+  padding: var(--spacing-8) 0;
+}
+
+.project-card-name {
+  width: 98px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-label-small);
+  color: var(--content-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-card-timeline {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.project-card-timeline-row {
+  display: flex;
+  gap: var(--spacing-4);
+  align-items: center;
+}

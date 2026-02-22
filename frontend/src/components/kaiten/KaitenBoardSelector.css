@@ -1,0 +1,103 @@
+/* KaitenBoardSelector component styles */
+
+.kaiten-board-selector {
+  position: relative;
+  width: 100%;
+}
+
+.kaiten-board-selector-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.kaiten-board-selector-input {
+  width: 100%;
+}
+
+.kaiten-board-selector-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--spacing-4, 4px);
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-secondary, rgba(0, 0, 0, 0.32));
+  border-radius: var(--radius-s, 4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-8, 8px);
+  max-height: 300px;
+}
+
+.kaiten-board-selector-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4, 4px);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.kaiten-board-selector-item {
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  color: var(--content-primary, black);
+  cursor: pointer;
+  border-radius: var(--radius-s, 4px);
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-8, 8px);
+}
+
+.kaiten-board-selector-item:hover {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+}
+
+.kaiten-board-selector-item.selected {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+  font-weight: 500;
+}
+
+.kaiten-board-selector-item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kaiten-board-selector-item-id {
+  font-size: var(--font-size-caption, 12px);
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+.kaiten-board-selector-empty {
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+  text-align: center;
+}
+
+.kaiten-board-selector-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+.kaiten-board-selector.loading,
+.kaiten-board-selector.empty {
+  padding: var(--spacing-8, 8px);
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  color: var(--content-secondary, rgba(0, 0, 0, 0.6));
+}

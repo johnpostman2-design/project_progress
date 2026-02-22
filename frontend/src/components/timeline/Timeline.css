@@ -1,0 +1,112 @@
+/* Timeline container: fit width, no horizontal scroll; между строками строго 4px */
+.timeline {
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  row-gap: 4px;
+  column-gap: 0;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Timeline row: высота под ProgressBar (32px), между строками только row-gap 4px; overflow-y: visible чтобы тултип дат не обрезался */
+.timeline-row {
+  display: flex;
+  cursor: pointer;
+  align-items: stretch;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.timeline-row-spacer {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.timeline-row-cell {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-row-cell .progress-bar {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+}
+
+/* Тултип с датами над ячейкой (Figma 218:101); оба бейджа на одной линии по базовой линии текста */
+.timeline-cell-tooltip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 2px;
+  margin-bottom: 4px;
+  min-height: 20px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.timeline-cell-tooltip-portal {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 2px;
+  min-height: 20px;
+}
+
+/* Текст тултипа: Caption/medium */
+.timeline-cell-tooltip-date {
+  padding: 2px 6px;
+  border-radius: var(--radius-s, 4px);
+  background: var(--surface-primary-invert-main, #000);
+  color: var(--content-invert, #fff);
+  font-family: var(--font-family);
+  font-size: var(--font-size-caption, 12px);
+  line-height: var(--line-height-caption, 14px);
+  font-weight: 500;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.timeline-cell-tooltip-start,
+.timeline-cell-tooltip-end { align-self: baseline; }
+
+/* Hover (Figma 218:101) — border content/secondary */
+.timeline-row-cell-hover .progress-bar {
+  border: 1px solid var(--content-secondary);
+}
+
+/* Hover на зелёной ячейке — surface/success/hover */
+.timeline-row-cell-hover .progress-bar.progress-bar-project-completed {
+  background: var(--surface-success-hover);
+}
+
+.timeline-row-cell-hover .progress-bar.progress-bar-project-completed .progress-bar-fill {
+  background: var(--surface-success-hover);
+}
+
+/* Выбранный этап (Figma 218:101) — border content/brand */
+.timeline-row-cell-selected .progress-bar {
+  border: 1px solid var(--content-brand);
+}

@@ -1,0 +1,395 @@
+.dashboard {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--surface-primary-main);
+}
+
+.dashboard-main {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-20) var(--spacing-20) var(--spacing-60) var(--spacing-20);
+  width: 100%;
+  box-sizing: border-box;
+  transition: padding-right 0s;
+}
+
+.dashboard-header-sidebar-open {
+  padding-right: 316px; /* Отступ для правой панели (296px + 20px) */
+}
+
+.dashboard-header-title {
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-large);
+  line-height: var(--line-height-label-large);
+  font-weight: 400;
+  color: var(--content-primary);
+}
+
+.dashboard-header-actions {
+  display: flex;
+  gap: var(--spacing-28);
+  align-items: center;
+}
+
+.dashboard-header-actions-buttons {
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: center;
+}
+
+.dashboard-header-actions-kebab-wrap {
+  position: relative;
+}
+
+/* Ссылка Архив — как Link: content-secondary, hover content-primary */
+.dashboard-header-link {
+  display: flex;
+  gap: var(--spacing-4);
+  align-items: center;
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-label-small);
+  color: var(--content-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.dashboard-header-link:hover {
+  color: var(--content-primary);
+}
+
+.dashboard-header-link:focus-visible {
+  outline: 2px solid var(--content-primary);
+  outline-offset: 2px;
+}
+
+.dashboard-header-link-secondary {
+  color: var(--content-tertiary);
+}
+
+.dashboard-header-link-counter {
+  color: var(--content-tertiary);
+}
+
+.dashboard-content {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: var(--spacing-20, 20px);
+  padding: 0 var(--spacing-20, 20px) var(--spacing-20, 20px) var(--spacing-20, 20px);
+  padding-left: 20px;
+  padding-right: var(--spacing-20, 20px);
+  transition: padding-right 0s;
+  box-sizing: border-box;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.dashboard-content-sidebar-open {
+  padding-right: 316px; /* Отступ для правой панели (296px + 20px) когда сайдблок открыт */
+}
+
+.dashboard-project-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-20, 20px);
+}
+
+.dashboard-projects-timelines {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-44, 44px);
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.dashboard-project-timeline-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+/* Hover по макету Figma 334:2289 — padding 4, surface/primary/hover */
+.timeline-container {
+  display: flex;
+  gap: var(--spacing-20, 20px);
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+  padding: var(--spacing-4, 4px);
+  border-radius: var(--radius-s, 4px);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.timeline-container:hover {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+}
+
+.timeline-container:focus-visible {
+  outline: 2px solid var(--content-primary);
+  outline-offset: 2px;
+}
+
+.timeline-container-active {
+  background: var(--surface-secondary-main, rgba(0, 0, 0, 0.04));
+}
+
+/* Завершённый проект */
+.timeline-container-completed {
+  background: var(--surface-primary-main);
+}
+
+.timeline-container-completed:hover {
+  background: var(--surface-success-hover);
+}
+
+.timeline-container-completed.timeline-container-active {
+  background: var(--surface-success-main);
+}
+
+.timeline-container-completed.timeline-container-active:hover {
+  background: var(--surface-success-hover);
+}
+
+/* Заголовок проекта — простой текст (Label/small), обрезка троеточием */
+.timeline-project-name {
+  width: 98px;
+  min-width: 98px;
+  max-width: 98px;
+  padding: var(--spacing-8, 8px) 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: var(--typescale-lable-small-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-lable-small-weight, normal);
+  font-size: 14px;
+  line-height: 16px;
+  color: var(--content-primary, black);
+  box-sizing: border-box;
+  height: 32px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Обрезка текста с троеточием */
+.timeline-project-name > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1 1 auto;
+  max-width: 100%;
+}
+
+/* overflow-y: visible чтобы тултипы дат над ячейками этапов не обрезались; cursor: pointer — клик по области вне ячеек открывает проект */
+.timeline-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: visible;
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.dashboard-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-40, 40px);
+  color: var(--content-secondary, rgba(0, 0, 0, 0.6));
+}
+
+.project-rename-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.project-rename-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.project-rename-modal h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.project-rename-modal input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.project-rename-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.project-rename-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.project-rename-actions button:first-child {
+  background: #f0f0f0;
+}
+
+.project-rename-actions button:last-child {
+  background: #238ce7;
+  color: white;
+}
+
+.timeline-preview-container {
+  display: flex;
+  gap: var(--spacing-20, 20px);
+  align-items: center;
+  width: 100%;
+  min-width: 0; /* Для респонсивности */
+}
+
+.timeline-preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4, 4px);
+  min-width: 0;
+  overflow: hidden; /* Исключаем горизонтальный скролл */
+}
+
+/* Респонсивные стили для таймлайна */
+@media (max-width: 768px) {
+  .timeline-preview-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-12, 12px);
+}
+
+  .timeline-project-name {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    padding: var(--spacing-4, 4px) 0;
+    justify-content: flex-start;
+  }
+
+  .timeline-preview {
+    width: 100%;
+  }
+
+  .dashboard-content {
+    padding: 0 var(--spacing-12, 12px) var(--spacing-12, 12px) var(--spacing-12, 12px);
+  }
+
+  .timeline-container {
+    flex-direction: column;
+    gap: var(--spacing-12, 12px);
+  }
+
+}
+
+@media (max-width: 480px) {
+  .timeline-project-name {
+    font-size: 12px;
+  }
+
+  .dashboard-header {
+    padding: var(--spacing-12, 12px);
+    flex-wrap: wrap;
+    gap: var(--spacing-8, 8px);
+  }
+
+  .dashboard-header-title {
+    font-size: 16px;
+  }
+
+}
+
+
+.dashboard-sync-button {
+  align-self: flex-start;
+}
+
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-20);
+  width: 100%;
+}
+
+.project-item {
+  display: flex;
+  gap: var(--spacing-20);
+  align-items: flex-start;
+}
+
+.project-name {
+  width: 98px;
+  padding: var(--spacing-8) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-label-small);
+  color: var(--content-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-name-selected {
+  color: var(--content-brand, #238ce7);
+}
+
+.project-timeline {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.project-timeline-row {
+  display: flex;
+  gap: var(--spacing-4);
+  align-items: center;
+}

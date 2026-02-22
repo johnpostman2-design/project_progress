@@ -1,0 +1,39 @@
+/* Icon icon/loading from Figma UI kit - node-id: 287:4019 */
+
+.icon-24-loading {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  transform: scale(1);
+  transition: transform 0.2s;
+}
+
+.icon-24-loading-size {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.icon-24-loading-union {
+  position: absolute;
+  inset: 12.5% 15% 15% 12.5%;
+}
+
+.icon-24-loading-image {
+  display: block;
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  transform: scale(1);
+}
+
+.icon-24-loading.icon-24-loading-spin .icon-24-loading-union,
+.icon-24-loading.icon-24-loading-spin .icon-24-loading-size {
+  animation: icon-24-loading-spin 0.8s linear infinite;
+}
+
+@keyframes icon-24-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

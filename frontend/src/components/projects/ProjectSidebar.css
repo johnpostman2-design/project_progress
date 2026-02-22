@@ -1,0 +1,570 @@
+.project-sidebar-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Плавное появление контента при смене проекта — «одно пространство» */
+@keyframes project-sidebar-content-fade-in {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+.project-sidebar-container {
+  animation: project-sidebar-content-fade-in 0.2s ease-out;
+}
+
+.project-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 296px;
+  margin: 0;
+  background: var(--surface-primary-main, white);
+  border-left: 1px solid var(--border-tertiary, rgba(0, 0, 0, 0.16));
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+  padding-left: 0;
+  padding-right: 0;
+  z-index: 100;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.project-sidebar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 8px;
+  width: 100%;
+}
+
+.project-sidebar-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 20px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.project-sidebar-name-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding-left: 0px;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: var(--surface-primary-main, white);
+  border-radius: var(--s, 4px);
+  position: relative;
+  width: 100%;
+  min-width: 0; /* Позволяет контейнеру сжиматься */
+  box-sizing: border-box;
+  overflow: visible; /* Позволяем кнопке kebab быть видимой */
+}
+
+.project-sidebar-name {
+  flex: 1 0 0;
+  font-family: var(--typescale-lable-medium-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-lable-medium-weight, normal);
+  font-size: 17px;
+  line-height: 24px;
+  color: var(--content-primary, black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+}
+
+.project-sidebar-kebab-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.project-sidebar-kebab-button-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-sidebar-kebab-container .project-sidebar-kebab-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  min-height: 40px;
+  padding: 0;
+}
+
+.project-sidebar-dates {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding-left: 12px;
+}
+
+.project-sidebar-date {
+  font-family: var(--typescale-caption-medium-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-caption-medium-weight, normal);
+  font-size: 12px;
+  line-height: 14px;
+  color: var(--content-secondary, rgba(0, 0, 0, 0.6));
+  margin: 0;
+}
+
+.project-sidebar-date-arrow {
+  width: 12.81px;
+  height: 8.75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--content-secondary, rgba(0, 0, 0, 0.6));
+}
+
+.project-sidebar-stages {
+  border-top: 1px solid var(--border-tertiary, rgba(0, 0, 0, 0.16));
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-top: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+  width: 100%;
+}
+
+.project-sidebar-stages-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 8px;
+  padding-left: 12px;
+}
+
+.project-sidebar-stages-title {
+  flex: 1 0 0;
+  font-family: var(--typescale-lable-small-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-lable-small-weight, normal);
+  font-size: 14px;
+  line-height: 16px;
+  color: var(--content-primary, black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.project-sidebar-stages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-left: 0;
+  width: 100%;
+}
+
+.project-sidebar-stage-item {
+  display: flex;
+  gap: var(--spacing-8, 8px);
+  align-items: center;
+  padding: 0 var(--spacing-12, 12px) 0 0;
+  width: 100%;
+}
+
+.project-sidebar-stage-name-container {
+  flex: 1 0 0;
+  display: flex;
+  gap: var(--spacing-8, 8px);
+  align-items: center;
+  min-width: 0;
+}
+
+.project-sidebar-stage-name {
+  flex: 1 0 0;
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
+  border-radius: var(--radius-s, 4px);
+  background-color: var(--surface-primary-main, white);
+  cursor: pointer;
+  min-height: 32px;
+  min-width: 0;
+  width: 100%;
+  gap: var(--spacing-4, 4px);
+}
+
+.project-sidebar-stage-name.hover {
+  background-color: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+}
+
+.project-sidebar-stage-name span {
+  font-family: var(--font-family);
+  font-size: var(--font-size-label-small, 14px);
+  line-height: var(--line-height-label-small, 16px);
+  color: var(--content-primary, black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.project-sidebar-name-editable-wrapper {
+  flex: 1 0 0;
+  min-width: 0; /* Позволяет элементу сжиматься */
+  overflow: hidden; /* Скрываем переполнение текста */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
+  width: 0; /* Принудительно ограничиваем ширину для правильной работы flex */
+}
+
+/* Стили для обрезки текста в EditableName внутри сайдблока */
+.project-sidebar-name-editable {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.project-sidebar-name-editable .editable-name {
+  flex: 1 0 0;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.project-sidebar-name-editable .editable-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 0 0;
+  display: block;
+}
+
+.project-sidebar-name-editable .editable-name-hover-container {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 0 0;
+  width: 100%;
+}
+
+.project-sidebar-name-editable .editable-name-hover-container .editable-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 0 0;
+  display: block;
+}
+
+.project-sidebar-name-editable .editable-name-input-container {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.project-sidebar-name-editable .editable-name-input {
+  max-width: 100%;
+  min-width: 0;
+  width: 100%;
+}
+
+
+.project-sidebar-stage-name-wrapper {
+  flex: 1 0 0;
+  min-width: 0;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.project-sidebar-stage-name {
+  flex: 1 0 0;
+  font-family: var(--typescale-lable-small-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-lable-small-weight, normal);
+  font-size: 14px;
+  line-height: 16px;
+  color: var(--content-primary, black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 12px;
+  background: var(--surface-primary-main, white);
+  border-radius: var(--s, 4px);
+  transition: background-color 0.2s;
+}
+
+.project-sidebar-stage-name.hover {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+}
+
+.project-sidebar-stage-name-editable {
+  flex: 1 0 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.project-sidebar-stage-name-editable .editable-name-input-container {
+  width: 100%;
+}
+
+.project-sidebar-stage-name-editable .editable-name-input {
+  width: 100%;
+  border: 1px solid var(--border-tertiary, rgba(0, 0, 0, 0.16));
+  border-radius: var(--s, 4px);
+  padding: 8px 12px;
+  font-family: var(--typescale-lable-small-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-lable-small-weight, normal);
+  font-size: 14px;
+  line-height: 16px;
+  color: var(--content-primary, black);
+  background: var(--surface-primary-main, white);
+}
+
+.project-sidebar-stage-actions {
+  display: flex;
+  gap: var(--spacing-4, 4px);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.project-sidebar-stage-name-input-wrapper {
+  flex: 1 0 0;
+  width: 100%;
+}
+
+.project-sidebar-stage-name-input {
+  flex: 1 0 0;
+  width: 100%;
+}
+
+.project-sidebar-stage-kebab-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.project-sidebar-stage-kebab-button-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-sidebar-stage-kebab-container .project-sidebar-stage-kebab-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  min-height: 32px;
+  padding: 0;
+}
+
+.project-sidebar-stage-date-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8, 8px) var(--spacing-4, 4px);
+  width: 61px;
+  height: auto;
+  background: var(--surface-primary-main, white);
+  border: none;
+  border-radius: var(--radius-s, 4px);
+  font-family: var(--font-family);
+  font-size: var(--font-size-caption, 12px);
+  line-height: var(--line-height-caption, 14px);
+  font-weight: 400;
+  color: var(--content-secondary, rgba(0, 0, 0, 0.6));
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.project-sidebar-stage-date-button:hover {
+  background: var(--surface-primary-hover, rgba(0, 0, 0, 0.08));
+  color: var(--content-primary, black);
+}
+
+.project-sidebar-stage-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 12.81px;
+  height: 8.75px;
+}
+
+.project-sidebar-stage-arrow-icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ——— Панель информации об этапе (Figma 276-1918) ——— */
+.project-sidebar-stage-view .project-sidebar-container {
+  padding-top: 0;
+}
+
+/* 1. Ссылка «назад» — использует компонент Link из Figma; только отступы под сайдбар */
+.project-sidebar-back-link {
+  display: block;
+  width: 100%;
+  margin-left: 12px;
+  margin-bottom: var(--spacing-8);
+}
+
+.project-sidebar-stage-view .project-sidebar-stage-header {
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+/* 2. Кнопки выбора дат — компонент btn-date из Figma (228:116): default, hover, disabled */
+.project-sidebar-stage-dates {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding-left: 0;
+  padding-bottom: var(--spacing-16);
+}
+
+/* Переопределение gap по макету 276:1918 — даты без отступа между кнопками и стрелкой */
+.project-sidebar-dates.project-sidebar-stage-dates {
+  gap: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.project-sidebar-date-input-hidden {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+/* Default: белый фон, вторичный цвет текста (Figma 228:116) */
+.project-sidebar-btn-date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 61px;
+  height: 32px;
+  padding: var(--spacing-8) var(--spacing-4);
+  background: var(--surface-primary-main);
+  border: none;
+  border-radius: var(--radius-s);
+  font-family: var(--font-family);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: 400;
+  color: var(--content-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Hover: светло-серый скруглённый фон, чёрный текст (Figma 228:116) */
+.project-sidebar-btn-date:hover {
+  background: var(--surface-primary-hover);
+  color: var(--content-primary);
+}
+
+/* Disabled: белый фон, серый текст (Figma 228:116) */
+.project-sidebar-btn-date:disabled {
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.4));
+  cursor: default;
+}
+
+.project-sidebar-btn-date:focus-visible {
+  outline: 2px solid var(--border-focus, rgba(0, 0, 0, 0.4));
+  outline-offset: 2px;
+}
+
+.project-sidebar-stage-dates .project-sidebar-date-arrow {
+  flex-shrink: 0;
+  color: var(--content-secondary);
+}
+
+/* 3. Секция списка задач и счётчик — Figma 276:1918 */
+.project-sidebar-stage-tasks-section {
+  border-top: 1px solid var(--border-tertiary);
+  padding-top: var(--spacing-16);
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* Счётчик «N / M задач» — Figma 276:1918: Label/small из UI-kit (токены) */
+.project-sidebar-stage-tasks-counter {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: var(--font-size-label-small);
+  line-height: var(--line-height-label-small);
+  color: var(--content-primary);
+  margin: 0 0 var(--spacing-12) 0;
+}
+
+/* 4. Список задач — UI-kit Figma 228:483: иконка 16, текст Caption/medium, content/secondary */
+.project-sidebar-stage-tasks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.project-sidebar-stage-task-empty {
+  font-family: var(--font-family);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  color: var(--content-secondary);
+  padding: var(--spacing-8) 0;
+}
+
+/* По 228:483: вертикальный отступ между задачами — spacing-4 (меньше, чем было) */
+.project-sidebar-stage-task-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4) 0;
+}
+
+/* По 228:483: не выполнена — отключённый Done (content/tertiary) */
+.project-sidebar-stage-task-icon {
+  color: var(--content-tertiary);
+}
+
+/* По 228:483: выполнена — активный Done (content/success) */
+.project-sidebar-stage-task-item.completed .project-sidebar-stage-task-icon {
+  color: var(--content-success);
+}
+
+/* Текст задачи: Caption/medium, content/secondary — 228:483 */
+/* По макету: одна строка, при переполнении — троеточие */
+.project-sidebar-stage-task-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  color: var(--content-secondary);
+}

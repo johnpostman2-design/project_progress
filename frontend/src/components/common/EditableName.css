@@ -1,0 +1,122 @@
+/* EditableName component - project-specific */
+
+.editable-name {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.editable-name-default {
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: var(--s, 4px);
+}
+
+.editable-name-hover {
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: var(--s, 4px);
+}
+
+.editable-name-focus {
+  gap: 0;
+}
+
+.editable-name-medium .editable-name-text {
+  font-family: var(--typescale-lable-medium-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-lable-medium-weight, normal);
+  font-size: 17px;
+  line-height: 24px;
+  color: var(--content-primary, black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  flex: 1 0 0;
+  display: block;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.editable-name-small .editable-name-text {
+  font-family: var(--typescale-lable-small-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-lable-small-weight, normal);
+  font-size: 14px;
+  line-height: 16px;
+  color: var(--content-primary, black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+.editable-name-hover-container {
+  display: flex;
+  flex: 1 0 0;
+  gap: 0;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  padding: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.08) 100%), linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%);
+  border-radius: var(--s, 4px);
+  overflow: hidden;
+}
+
+.editable-name-hover-container .editable-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  flex: 1 0 0;
+  display: block;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.editable-name-input-container {
+  display: flex;
+  flex: 1 0 0;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  padding: 8px 12px;
+  background: var(--surface-primary-main, white);
+  border: 1px solid var(--border-tertiary, rgba(0, 0, 0, 0.16));
+  border-radius: var(--s, 4px);
+}
+
+.editable-name-input {
+  flex: 1 0 0;
+  font-family: var(--typescale-lable-medium-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-lable-medium-weight, normal);
+  font-size: 17px;
+  line-height: 24px;
+  color: var(--content-primary, black);
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.editable-name-input::placeholder {
+  color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+}
+
+.editable-name-small .editable-name-input {
+  font-family: var(--typescale-lable-small-font, 'ONY_ONE:regular', sans-serif);
+  font-weight: var(--typescale-lable-small-weight, normal);
+  font-size: 14px;
+  line-height: 16px;
+}

@@ -1,50 +1,61 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Конституция проекта Project Progress
 
-## Core Principles
+## Основные принципы
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Type Safety First (НЕПРЕМЕННО)
+Весь код ДОЛЖЕН быть написан на TypeScript со строгой проверкой типов. Типы `any` запрещены без явного обоснования. Все ответы API, props компонентов и state должны иметь определённые типы. Type definitions для Kaiten API должны быть сгенерированы или поддерживаться вручную для обеспечения type safety на уровне интеграции.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Component-Based Architecture
+React компоненты ДОЛЖНЫ быть самодостаточными, переиспользуемыми и следовать принципу единственной ответственности. Каждый компонент должен иметь чёткий интерфейс props, правильные error boundaries и состояния загрузки. Ячейки таймлайна, карточки этапов и представления проектов должны быть реализованы как независимые, тестируемые компоненты.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Стандарты интеграции с API
+Интеграция с Kaiten API ДОЛЖНА быть абстрагирована за service layer. Все вызовы API должны обрабатывать ошибки корректно, реализовывать retry logic для временных сбоев и кэшировать ответы соответствующим образом. Синхронизация API должна быть двунаправленной, где это возможно, с чёткими стратегиями разрешения конфликтов. Для read-only источников данных (например, Kaiten API, где приложение не владеет данными и только читает задачи) синхронизация односторонняя (read-only). При создании проекта этапы и задачи из Kaiten API ДОЛЖНЫ быть привязаны немедленно.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Консистентность UI/UX
+Все UI компоненты ДОЛЖНЫ следовать design system из Figma UI kit, доступного через Figma MCP. Запрещено кастомное стилизование, отклоняющееся от design system без явного одобрения. Интерактивные элементы (кнопки, inputs, модальные окна) должны поддерживать консистентное поведение и визуальный вид во всём приложении.
+- UI-kit: https://www.figma.com/design/pj5aiXE1X40rEoVbtyVQ2F/Turbo?node-id=0-1
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Масштабируемость и расширяемость
+Архитектура ДОЛЖНА поддерживать будущее расширение: новые типы задач, дополнительные функции управления проектами и улучшения интерфейса. Организация кода должна разделять concerns (data layer, presentation layer, business logic). Configuration и feature flags должны использоваться для постепенного внедрения новых возможностей.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### VI. Целостность синхронизации данных
+Визуализация таймлайна ДОЛЖНА точно отражать статус задач из Kaiten API. Состояния завершения и паузы этапов должны синхронизироваться двунаправленно. Параллельные этапы с перекрывающимися таймлайнами должны корректно отображаться без визуальных конфликтов. Расчёт прогресса должен основываться на фактическом статусе выполнения задач, а не только на локальном state.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+## Требования к технологическому стеку
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- **Frontend Framework**: React с TypeScript (strict mode)
+- **Интеграция с API**: REST API для интеграции с Kaiten
+- **Backend/Storage**: Firebase или эквивалентный cloud backend для хранения данных
+- **Design System**: Компоненты Figma UI kit через Figma MCP
+- **State Management**: React hooks и context API (или Redux при необходимости)
+- **Аутентификация**: Контроль доступа по паролю для веб-приложения
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Процесс разработки
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+### Quality Gates для кода
+- Все компоненты должны иметь определённые TypeScript типы
+- Методы API service должны включать обработку ошибок и определения типов
+- Логика рендеринга таймлайна должна быть покрыта unit тестами
+- Integration тесты обязательны для потоков синхронизации Kaiten API
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### Процесс ревью
+- PR должны проверять соответствие Figma design system
+- Изменения интеграции API требуют покрытия integration тестами
+- Новые типы задач или функции управления этапами должны включать план миграции
+- Необходимо оценивать влияние на производительность при рендеринге таймлайна с большими наборами данных
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Требования к тестированию
+- Unit тесты для business logic (расчёты этапов, отслеживание прогресса)
+- Integration тесты для синхронизации Kaiten API
+- Visual regression тесты для рендеринга таймлайна
+- E2E тесты для критических пользовательских сценариев (создание проекта, обновление этапа, просмотр таймлайна)
+
+## Управление
+
+Эта конституция имеет приоритет над всеми остальными практиками разработки. Все PR и code review должны проверять соответствие этим принципам. Сложность должна быть обоснована чёткой аргументацией. Изменения в конституцию требуют:
+1. Документирования обоснования изменения
+2. Анализа влияния на существующую codebase
+3. Плана миграции при внесении breaking changes
+4. Увеличения версии по правилам semantic versioning (MAJOR.MINOR.PATCH)
+
+**Версия**: 1.0.1 | **Ратифицирована**: 2025-02-02 | **Последнее изменение**: 2025-02-02
