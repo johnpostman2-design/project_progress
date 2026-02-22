@@ -126,8 +126,11 @@ const apiRequest = async <T>(
         errorMessage = 'Ошибка авторизации: проверьте правильность API ключа'
       } else if (response.status === 404) {
         const urlMatch = url.match(/\/boards\/(\d+)/)
-        if (url === '/spaces' || url.startsWith('/spaces')) {
+        // Сообщение про «список пространств» только для запроса именно списка /spaces, не для /spaces/.../boards/...
+        if (url === '/spaces' || url === 'spaces') {
           errorMessage = 'Не удалось загрузить список пространств и досок. Проверьте API ключ Kaiten и права доступа (должен быть доступ к пространствам).'
+        } else if (url.includes('/spaces/') && url.includes('/groups')) {
+          errorMessage = 'Не удалось загрузить этапы доски. Проверьте, что доска и пространство доступны по API ключу.'
         } else if (urlMatch) {
           const boardId = urlMatch[1]
           errorMessage = `Ресурс не найден: доска с ID ${boardId}. Проверьте, что доска существует и API ключ имеет к ней доступ.`
