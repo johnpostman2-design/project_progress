@@ -22,10 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const { path, query } = getPathAndQuery(req.url)
-  let domain = (req.headers['x-kaiten-domain'] as string) ?? 'onyagency'
-  domain = (domain || '').trim().replace(/\.kaiten\.ru$/i, '').split('.')[0] || 'onyagency'
-
-  const base = process.env.KAITEN_API_BASE ?? `https://${domain}.kaiten.ru/api/v1`
+  const base = `https://onyagency.kaiten.ru/api/v1`
   const pathPart = path ? `/${path}` : ''
   const kaitenUrl = `${base}${pathPart}${query}`
 
