@@ -337,7 +337,7 @@ export const getBoardGroups = async (
       })
     }
     
-    // Пробуем получить группы доски: /groups, /lanes, /columns; иногда API в единственном числе /board/
+    // Пробуем получить группы доски: /groups, /lanes, /columns; /entity/; разбор /spaces с вложенными данными
     const mapLanesToGroups = (lanes: any[]) =>
       lanes.map((lane: any) => ({
         id: lane.id,
@@ -347,6 +347,34 @@ export const getBoardGroups = async (
         created_at: lane.created_at || new Date().toISOString(),
         updated_at: lane.updated_at || new Date().toISOString(),
       }))
+    const findLanesInObject = (obj: any): any[] | null => {
+      if (!obj || typeof obj !== 'object') return null
+      if (obj.id === boardId) {
+        if (Array.isArray(obj.lanes)) return obj.lanes
+        if (Array.isArray(obj.groups)) return obj.groups
+        if (Array.isArray(obj.columns)) return obj.columns
+      }
+      if (Array.isArray(obj)) {
+        for (const item of obj) {
+          const found = findLanesInObject(item)
+          if (found) return found
+        }
+        return null
+      }
+      for (const v of Object.values(obj)) {
+        const found = findLanesInObject(v)
+        if (found) return found
+      }
+      return null
+    }
+    // Эндпоинт entity (некоторые инстансы Kaiten)
+    for (const ep of [`/entities/${boardId}`, `/entity/${boardId}`]) {
+      try {
+        const data = await apiRequest<any>(ep, config)
+        const lanes = findLanesInObject(data)
+        if (Array.isArray(lanes)) return mapLanesToGroups(lanes)
+      } catch (_) {}
+    }
     const endpointsToTry: string[] = [
       `/boards/${boardId}/groups`,
       `/boards/${boardId}/lanes`,
@@ -362,6 +390,17 @@ export const getBoardGroups = async (
           const isLaneLike = data.length === 0 || data[0]?.name != null || data[0]?.title != null
           if (isLaneLike) return mapLanesToGroups(data)
           return data as KaitenGroup[]
+        }
+      } catch (_) {}
+    }
+    // Fallback: /spaces с expand — ищем доску и этапы во вложенной структуре
+    for (const q of ['?expand=boards,boards.lanes', '?expand=boards', '?include=boards']) {
+      try {
+        const spacesData = await apiRequest<any>(`/spaces${q}`, config)
+        const arr = Array.isArray(spacesData) ? spacesData : (spacesData?.data ?? spacesData?.spaces)
+        if (Array.isArray(arr)) {
+          const lanes = findLanesInObject(arr)
+          if (Array.isArray(lanes)) return mapLanesToGroups(lanes)
         }
       } catch (_) {}
     }
@@ -504,13 +543,17 @@ export const getBoardGroups = async (
           }
           
           if (import.meta.env.DEV) {
-            console.warn(`[Kaiten API] Все варианты получения групп для доски ${boardId} не сработали. Возможные причины:
-- Доска ${boardId} не существует или была удалена
-- API ключ не имеет доступа к этой доске
-- Неправильный space_id: ${config.spaceId}
-- Endpoint для получения групп может отличаться в вашей версии Kaiten API`)
+            console.warn(`[Kaiten API] Все варианты получения групп для доски ${boardId} не сработали. Возвращаем один этап-заглушку.`)
           }
-          throw spaceError
+          // Заглушка: один этап, чтобы можно было подключить доску; этапы можно добавить вручную
+          return [{
+            id: boardId * 1000,
+            name: 'Все задачи',
+            board_id: boardId,
+            position: 0,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }]
         }
       } else {
         // Если нет spaceId или другая ошибка, просто пробрасываем
