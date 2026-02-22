@@ -8,6 +8,31 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      (function() {
+        var f = window.fetch;
+        if (!f) return;
+        window.fetch = function(url, opts) {
+          var u = typeof url === 'string' ? url : (url && url.url);
+          if (u && u.indexOf('kaiten.ru') !== -1) {
+            try {
+              var parsed = new URL(u, location.origin);
+              if (parsed.hostname.endsWith('.kaiten.ru')) {
+                var domain = parsed.hostname.slice(0, -10);
+                var path = parsed.pathname.replace(/^\/api\/v1/, '') || '/';
+                if (!path.startsWith('/')) path = '/' + path;
+                var newUrl = location.origin + '/api/kaiten' + path + parsed.search;
+                var headers = new Headers(opts && opts.headers || {});
+                headers.set('X-Kaiten-Domain', domain);
+                opts = Object.assign({}, opts, { headers: headers });
+                url = newUrl;
+              }
+            } catch (e) {}
+          }
+          return f.call(this, url, opts);
+        };
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

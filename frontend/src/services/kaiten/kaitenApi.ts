@@ -57,6 +57,10 @@ const apiRequest = async <T>(
   } else {
     fullUrl = `${baseUrl}${urlPath}`
   }
+  // В браузере всегда используем прокси (обход CORS): старый бандл или localStorage могли оставить прямой URL на kaiten.ru
+  if (typeof window !== 'undefined' && fullUrl.startsWith('http')) {
+    fullUrl = `/api/kaiten${urlPath.startsWith('/') ? urlPath : `/${urlPath}`}`
+  }
   
   // В режиме разработки убеждаемся, что URL начинается с /api/kaiten
   if (import.meta.env.DEV && !fullUrl.startsWith('http') && !fullUrl.startsWith('/api/kaiten')) {
