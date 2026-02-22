@@ -129,8 +129,8 @@ const apiRequest = async <T>(
         // Сообщение про «список пространств» только для запроса именно списка /spaces, не для /spaces/.../boards/...
         if (url === '/spaces' || url === 'spaces') {
           errorMessage = 'Не удалось загрузить список пространств и досок. Проверьте API ключ Kaiten и права доступа (должен быть доступ к пространствам).'
-        } else if (url.includes('/spaces/') && url.includes('/groups')) {
-          errorMessage = 'Не удалось загрузить этапы доски. Проверьте, что доска и пространство доступны по API ключу.'
+        } else if ((url.includes('/spaces/') && url.includes('/groups')) || (url.includes('/boards/') && (url.includes('/groups') || url.includes('/lanes') || url.includes('/columns')))) {
+          errorMessage = 'Не удалось загрузить этапы доски. Проверьте доступ API ключа к доске. Если на локальном хосте всё работает — возможно, у вашего Kaiten другой набор API (версия/эндпоинты).'
         } else if (urlMatch) {
           const boardId = urlMatch[1]
           errorMessage = `Ресурс не найден: доска с ID ${boardId}. Проверьте, что доска существует и API ключ имеет к ней доступ.`
@@ -337,23 +337,39 @@ export const getBoardGroups = async (
       })
     }
     
-    // Пробуем получить группы доски: /groups, затем /lanes (разные версии Kaiten)
-    try {
-      return await apiRequest<KaitenGroup[]>(`/boards/${boardId}/groups`, config)
-    } catch (groupsErr) {
+    // Пробуем получить группы доски: /groups, /lanes, /columns; иногда API в единственном числе /board/
+    const mapLanesToGroups = (lanes: any[]) =>
+      lanes.map((lane: any) => ({
+        id: lane.id,
+        name: lane.name || lane.title || 'Без названия',
+        board_id: lane.board_id ?? boardId,
+        position: lane.position ?? lane.order ?? 0,
+        created_at: lane.created_at || new Date().toISOString(),
+        updated_at: lane.updated_at || new Date().toISOString(),
+      }))
+    const endpointsToTry: string[] = [
+      `/boards/${boardId}/groups`,
+      `/boards/${boardId}/lanes`,
+      `/boards/${boardId}/columns`,
+      `/board/${boardId}/groups`,
+      `/board/${boardId}/lanes`,
+      `/board/${boardId}/columns`,
+    ]
+    for (const endpoint of endpointsToTry) {
       try {
-        const lanes = await apiRequest<any[]>(`/boards/${boardId}/lanes`, config)
-        if (Array.isArray(lanes)) {
-          return lanes.map((lane: any) => ({
-            id: lane.id,
-            name: lane.name || lane.title || 'Без названия',
-            board_id: lane.board_id ?? boardId,
-            position: lane.position ?? lane.order ?? 0,
-            created_at: lane.created_at || new Date().toISOString(),
-            updated_at: lane.updated_at || new Date().toISOString(),
-          }))
+        const data = await apiRequest<any>(endpoint, config)
+        if (Array.isArray(data)) {
+          const isLaneLike = data.length === 0 || data[0]?.name != null || data[0]?.title != null
+          if (isLaneLike) return mapLanesToGroups(data)
+          return data as KaitenGroup[]
         }
       } catch (_) {}
+    }
+    let groupsErr: unknown
+    try {
+      return await apiRequest<KaitenGroup[]>(`/boards/${boardId}/groups`, config)
+    } catch (e) {
+      groupsErr = e
       const error = groupsErr
       // Вариант 2: Если есть spaceId, пробуем через space
       if (error instanceof KaitenApiError && error.statusCode === 404 && config.spaceId) {

@@ -38,6 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const headers: Record<string, string> = {
     Authorization: auth,
     Accept: 'application/json',
+    Host: `${domain}.kaiten.ru`,
   }
   if (req.headers['content-type']) {
     headers['Content-Type'] = req.headers['content-type'] as string

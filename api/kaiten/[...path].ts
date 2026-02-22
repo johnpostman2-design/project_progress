@@ -35,6 +35,7 @@ export default async function handler(req: { method?: string; headers: Record<st
   const headers: Record<string, string> = {
     Authorization: auth,
     Accept: 'application/json',
+    Host: `${domain}.kaiten.ru`,
   }
   const ct = req.headers['content-type']
   if (ct) headers['Content-Type'] = Array.isArray(ct) ? ct[0] : ct
