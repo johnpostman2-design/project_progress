@@ -22,9 +22,12 @@
                 var path = parsed.pathname.replace(/^\/api\/v1/, '') || '/';
                 if (!path.startsWith('/')) path = '/' + path;
                 var newUrl = location.origin + '/api/kaiten' + path + parsed.search;
-                var headers = new Headers(opts && opts.headers || {});
+                var headers = new Headers(opts && opts.headers);
+                if (url && url.headers && url.headers.forEach) {
+                  url.headers.forEach(function(v, k) { headers.set(k, v); });
+                }
                 headers.set('X-Kaiten-Domain', domain);
-                opts = Object.assign({}, opts, { headers: headers });
+                opts = opts ? Object.assign({}, opts, { headers: headers }) : { headers: headers };
                 url = newUrl;
               }
             } catch (e) {}

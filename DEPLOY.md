@@ -38,6 +38,12 @@ git push -u origin main
 2. Проверьте **Deployments** → последний деплой: статус должен быть **Ready** (Build успешен). Если Build с ошибкой — откройте лог и исправьте ошибку.
 3. **Environment Variables:** в Settings → Environment Variables добавьте `VITE_SUPABASE_URL` и `VITE_SUPABASE_ANON_KEY`. После изменений — **Redeploy**.
 
+**Если на проде ошибка «Не удалось выполнить запрос к … kaiten.ru» (CORS):**
+- Убедитесь, что проект в Vercel подключён к **этому** репозиторию и ветке **main** (Settings → Git).
+- **Root Directory** должен быть **`frontend`** — тогда деплоится и `frontend/api/kaiten` (прокси для Kaiten).
+- После деплоя откройте сайт с **жёстким обновлением** (Ctrl+Shift+R) или в режиме инкогнито, чтобы подтянулся новый index.html.
+- Проверьте в DevTools (Network): запросы к Kaiten должны идти на ваш домен `/api/kaiten/...`, а не на `kaiten.ru`.
+
 ### Вариант B: Netlify
 
 1. Зайдите на [netlify.com](https://netlify.com), войдите через GitHub.
