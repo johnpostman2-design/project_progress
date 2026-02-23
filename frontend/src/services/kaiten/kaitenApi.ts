@@ -64,24 +64,21 @@ const apiRequest = async <T>(
   }
 }
 
+const SPACE_ID = 311956
+
 export const getBoards = async (config: KaitenConfig): Promise<KaitenBoard[]> => {
-  const raw = await apiRequest<unknown>('/boards', config)
-  const list = Array.isArray(raw) ? raw : (raw && typeof raw === 'object' && 'data' in raw && Array.isArray((raw as { data: unknown }).data)) ? (raw as { data: unknown[] }).data : []
+  const list = await apiRequest<KaitenBoard[]>(`/spaces/${SPACE_ID}/boards`, config)
   if (!Array.isArray(list)) {
-    throw new KaitenApiError('Неверный формат ответа от /boards', 500)
+    throw new KaitenApiError('Неверный формат ответа', 500)
   }
-  return list.map((board: Record<string, unknown>) => {
-    const space = board.space && typeof board.space === 'object' ? (board.space as { id?: unknown }) : null
-    const spaceId = board.space_id != null ? Number(board.space_id) : (space?.id != null ? Number(space.id) : undefined)
-    return {
-      id: Number(board.id),
-      name: (board.name as string) || (board.title as string) || `Доска #${board.id}`,
-      description: (board.description as string) ?? null,
-      created_at: (board.created_at as string) || new Date().toISOString(),
-      updated_at: (board.updated_at as string) || new Date().toISOString(),
-      space_id: spaceId,
-    }
-  })
+  return list.map((board) => ({
+    id: board.id,
+    name: board.name ?? `Доска #${board.id}`,
+    description: board.description ?? null,
+    created_at: board.created_at ?? new Date().toISOString(),
+    updated_at: board.updated_at ?? new Date().toISOString(),
+    space_id: SPACE_ID,
+  }))
 }
 
 export const getBoardGroups = async (
