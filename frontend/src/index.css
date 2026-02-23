@@ -179,7 +179,7 @@ body {
 }
 
 .sidebar {
-  width: 296px;
+  width: 356px;
   background: var(--surface-primary-main);
   border-left: 1px solid var(--content-disabled);
   display: flex;

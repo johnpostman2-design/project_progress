@@ -25,7 +25,7 @@
 }
 
 .dashboard-header-sidebar-open {
-  padding-right: 316px; /* Отступ для правой панели (296px + 20px) */
+  padding-right: 376px; /* Отступ для правой панели (356px + 20px) */
 }
 
 .dashboard-header-title {
@@ -98,7 +98,7 @@
 }
 
 .dashboard-content-sidebar-open {
-  padding-right: 316px; /* Отступ для правой панели (296px + 20px) когда сайдблок открыт */
+  padding-right: 376px; /* Отступ для правой панели (356px + 20px) когда сайдблок открыт */
 }
 
 .dashboard-project-details {

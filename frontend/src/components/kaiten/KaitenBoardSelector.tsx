@@ -71,13 +71,26 @@ export const KaitenBoardSelector: React.FC<KaitenBoardSelectorProps> = ({
     if (!query) return boards
 
     const words = query.split(/\s+/).filter(Boolean)
-    return boards.filter((board) => {
+    const filtered = boards.filter((board) => {
       const name = (board.name || '').toLowerCase()
       const description = (board.description ?? '').toLowerCase()
       const idStr = String(board.id).toLowerCase()
       const searchable = `${name} ${description} ${idStr}`
 
       return words.every((word) => searchable.includes(word))
+    })
+
+    // Сортировка: точное совпадение и совпадение с начала — в начало списка
+    return [...filtered].sort((a, b) => {
+      const score = (board: { name?: string; id: number }) => {
+        const n = (board.name || '').toLowerCase()
+        const id = String(board.id).toLowerCase()
+        if (n === query || id === query) return 0
+        if (n.startsWith(query) || id.startsWith(query)) return 1
+        return 2
+      }
+
+      return score(a) - score(b)
     })
   }, [boards, searchQuery])
 

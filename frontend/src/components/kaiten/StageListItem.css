@@ -79,7 +79,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-8, 8px) var(--spacing-4, 4px);
-  width: 61px;
+  width: 100px;
   height: 32px;
   box-sizing: border-box;
   background: var(--surface-primary-main, white);
@@ -101,7 +101,7 @@
 .stage-list-item-date-wrap {
   position: relative;
   display: inline-flex;
-  width: 61px;
+  width: 100px;
   height: 32px;
   flex-shrink: 0;
 }
@@ -154,6 +154,12 @@
   line-height: var(--line-height-caption, 14px);
   font-weight: 400;
   color: var(--content-tertiary, rgba(0, 0, 0, 0.32));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  padding: 0 var(--spacing-4, 4px);
+  box-sizing: border-box;
 }
 
 .stage-list-item-date-button:hover {
