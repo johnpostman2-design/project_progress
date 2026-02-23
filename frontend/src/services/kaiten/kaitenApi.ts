@@ -77,13 +77,13 @@ interface SpaceWithBoards {
 }
 
 export const getBoards = async (config: KaitenConfig): Promise<KaitenBoard[]> => {
-  const spaces = await apiRequest<SpaceWithBoards[]>('/spaces', config)
+  const spaces = await apiRequest<SpaceWithBoards[]>('/spaces?expand=boards', config)
   if (!Array.isArray(spaces) || spaces.length === 0) {
-    throw new KaitenApiError('No spaces returned from Kaiten', 500)
+    throw new KaitenApiError('No spaces returned', 500)
   }
   const space = spaces[0]
-  if (!space.boards || !Array.isArray(space.boards)) {
-    throw new KaitenApiError('No boards found in space', 500)
+  if (!Array.isArray(space.boards)) {
+    throw new KaitenApiError('No boards in expanded space', 500)
   }
   return space.boards.map((board) => ({
     id: board.id,
