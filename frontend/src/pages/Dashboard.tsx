@@ -167,7 +167,7 @@ export const Dashboard: React.FC = () => {
     }
   }, [projects])
 
-  // Загрузка задач (getCardsByBoard) только при первом появлении boardId — защита от 429
+  // Авто-синхронизация задач из Kaiten при загрузке страницы и при появлении проектов/конфига
   useEffect(() => {
     if (!kaitenConfig || projects.length === 0) return
 
@@ -189,6 +189,12 @@ export const Dashboard: React.FC = () => {
           setTasks((prev) => ({ ...prev, [project.id]: prev[project.id] ?? [] }))
         })
     })
+
+    return () => {
+      projectsWithBoard.forEach((p) => {
+        if (p.kaitenBoardId != null) loadedBoardIdsRef.current.delete(String(p.kaitenBoardId))
+      })
+    }
   }, [projects, kaitenConfig, syncProject])
 
   // Задачи из Kaiten без подмены — прогресс считается по isCompleted из API
