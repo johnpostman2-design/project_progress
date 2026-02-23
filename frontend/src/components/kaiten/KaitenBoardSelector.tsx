@@ -20,76 +20,40 @@ export const KaitenBoardSelector: React.FC<KaitenBoardSelectorProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedBoardName, setSelectedBoardName] = useState<string>('')
 
   const selectedBoard = boards.find((b) => b.id === selectedBoardId)
-  
-  // Сохраняем название выбранной доски при изменении selectedBoardId или boards
-  // Обновляем только если название изменилось или еще не установлено
-  useEffect(() => {
-    if (selectedBoardId && selectedBoard?.name) {
-      // Обновляем только если название действительно изменилось
-      setSelectedBoardName(prev => {
-        // Если название уже установлено и совпадает - не обновляем
-        if (prev === selectedBoard.name) {
-          return prev
-        }
-        return selectedBoard.name
-      })
-    } else if (!selectedBoardId) {
-      // Сбрасываем только если доска действительно не выбрана
-      setSelectedBoardName('')
-    }
-    // Если доска выбрана, но не найдена в списке - сохраняем текущее название
-  }, [selectedBoardId, selectedBoard])
-  
-  // Синхронизируем searchQuery при закрытии списка
+
+  // При закрытии списка сбрасываем ввод
   useEffect(() => {
     if (!isOpen) {
       setSearchQuery('')
     }
   }, [isOpen])
 
-  // Определяем значение для отображения (ВСЕ ХУКИ ДОЛЖНЫ БЫТЬ ДО РАННИХ ВОЗВРАТОВ!)
-  const displayValue = React.useMemo(() => {
-    if (isOpen) {
-      return searchQuery
-    }
-    // Если список закрыт, показываем название выбранной доски
-    // Приоритет: сохраненное название > название из boards > пустая строка
-    if (selectedBoardName) {
-      return selectedBoardName
-    }
-    if (selectedBoard?.name) {
-      return selectedBoard.name
-    }
-    return ''
-  }, [isOpen, searchQuery, selectedBoardName, selectedBoard])
+  // В поле всегда показываем только введённый запрос при открытом списке; при закрытом — пусто, чтобы был виден плейсхолдер
+  const displayValue = isOpen ? searchQuery : ''
 
   const filteredBoards = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
     if (!query) return boards
 
-    const words = query.split(/\s+/).filter(Boolean)
     const filtered = boards.filter((board) => {
       const name = (board.name || '').toLowerCase()
       const description = (board.description ?? '').toLowerCase()
-      const idStr = String(board.id).toLowerCase()
-      const searchable = `${name} ${description} ${idStr}`
-
-      return words.every((word) => searchable.includes(word))
+      const idStr = String(board.id)
+      return name.includes(query) || description.includes(query) || idStr.includes(query)
     })
 
-    // Сортировка: точное совпадение и совпадение с начала — в начало списка
+    // Сортировка: точное совпадение названия/ID → начало названия/ID → вхождение в название → остальные
     return [...filtered].sort((a, b) => {
-      const score = (board: { name?: string; id: number }) => {
+      const score = (board: KaitenBoard) => {
         const n = (board.name || '').toLowerCase()
-        const id = String(board.id).toLowerCase()
+        const id = String(board.id)
         if (n === query || id === query) return 0
         if (n.startsWith(query) || id.startsWith(query)) return 1
-        return 2
+        if (n.includes(query)) return 2
+        return 3
       }
-
       return score(a) - score(b)
     })
   }, [boards, searchQuery])
@@ -135,8 +99,6 @@ export const KaitenBoardSelector: React.FC<KaitenBoardSelectorProps> = ({
                     selectedBoardId === board.id ? 'selected' : ''
                   }`}
                   onClick={() => {
-                    const boardName = board.name || `Доска #${board.id}`
-                    setSelectedBoardName(boardName)
                     onSelect(board)
                     setIsOpen(false)
                     setSearchQuery('')
