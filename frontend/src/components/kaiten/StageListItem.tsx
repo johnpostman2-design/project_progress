@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { KaitenGroup } from '../../services/kaiten/kaitenTypes'
+import { parseDateFromPaste } from '../../utils/dateUtils'
 import { Button } from '../common/Button'
 import { Input } from '../common/Input'
 import { Icon } from '../ui/Icon'
@@ -93,7 +94,17 @@ export const StageListItem: React.FC<StageListItemProps> = ({
   React.useEffect(() => {
     if (!editingStartDate) return
     const t = requestAnimationFrame(() => {
-      startDateInputRef.current?.focus()
+      const el = startDateInputRef.current
+      if (el) {
+        el.focus()
+        if ('showPicker' in el && typeof (el as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+          try {
+            (el as HTMLInputElement & { showPicker: () => void }).showPicker()
+          } catch {
+            // ignore
+          }
+        }
+      }
     })
     return () => cancelAnimationFrame(t)
   }, [editingStartDate])
@@ -101,7 +112,17 @@ export const StageListItem: React.FC<StageListItemProps> = ({
   React.useEffect(() => {
     if (!editingEndDate) return
     const t = requestAnimationFrame(() => {
-      endDateInputRef.current?.focus()
+      const el = endDateInputRef.current
+      if (el) {
+        el.focus()
+        if ('showPicker' in el && typeof (el as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+          try {
+            (el as HTMLInputElement & { showPicker: () => void }).showPicker()
+          } catch {
+            // ignore
+          }
+        }
+      }
     })
     return () => cancelAnimationFrame(t)
   }, [editingEndDate])
@@ -134,6 +155,21 @@ export const StageListItem: React.FC<StageListItemProps> = ({
     }
   }
 
+  const handleStartDatePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const value = parseDateFromPaste(e.clipboardData.getData('text'))
+    if (value) {
+      e.preventDefault()
+      onStartDateChange(stage.id, new Date(value))
+    }
+  }
+
+  const handleEndDatePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const value = parseDateFromPaste(e.clipboardData.getData('text'))
+    if (value) {
+      e.preventDefault()
+      onEndDateChange(stage.id, new Date(value))
+    }
+  }
 
   return (
     <div
@@ -201,6 +237,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
                     value={startDate ? startDate.toISOString().split('T')[0] : ''}
                     min={undefined}
                     onChange={handleStartDateChange}
+                    onPaste={handleStartDatePaste}
                     onBlur={() => setEditingStartDate(false)}
                   />
                   {!startDate && <span className="stage-list-item-date-placeholder">00.00.0000</span>}
@@ -226,6 +263,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
                     value={endDate ? endDate.toISOString().split('T')[0] : ''}
                     min={startDate ? startDate.toISOString().split('T')[0] : undefined}
                     onChange={handleEndDateChange}
+                    onPaste={handleEndDatePaste}
                     onBlur={() => setEditingEndDate(false)}
                   />
                   {!endDate && <span className="stage-list-item-date-placeholder">00.00.0000</span>}

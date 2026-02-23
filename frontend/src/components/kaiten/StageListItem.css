@@ -128,8 +128,13 @@
   cursor: pointer;
 }
 
-/* Скрыть нативный плейсхолдер (dd.mm.yyyy), когда показываем свой 00.00.00 */
-.stage-list-item-date-wrap.date-input-empty .stage-list-item-date-input::-webkit-datetime-edit {
+/* Скрыть все нативные сегменты (dd, mm, yyyy), когда показываем свой 00.00.0000 */
+.stage-list-item-date-wrap.date-input-empty .stage-list-item-date-input::-webkit-datetime-edit,
+.stage-list-item-date-wrap.date-input-empty .stage-list-item-date-input::-webkit-datetime-edit-fields-wrapper,
+.stage-list-item-date-wrap.date-input-empty .stage-list-item-date-input::-webkit-datetime-edit-text,
+.stage-list-item-date-wrap.date-input-empty .stage-list-item-date-input::-webkit-datetime-edit-month-field,
+.stage-list-item-date-wrap.date-input-empty .stage-list-item-date-input::-webkit-datetime-edit-day-field,
+.stage-list-item-date-wrap.date-input-empty .stage-list-item-date-input::-webkit-datetime-edit-year-field {
   color: transparent;
 }
 

@@ -494,9 +494,19 @@
   cursor: pointer;
 }
 
-/* Скрыть нативный плейсхолдер (dd.mm.yyyy), когда показываем свой 00.00.00 */
+/* Скрыть все нативные сегменты (dd, mm, yyyy), когда показываем свой 00.00.0000 */
 .project-sidebar-date-wrap.date-input-empty .project-sidebar-date-input-visible::-webkit-datetime-edit,
-.project-sidebar-date-wrap.date-input-empty .project-sidebar-stage-date-input::-webkit-datetime-edit {
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-date-input-visible::-webkit-datetime-edit-fields-wrapper,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-date-input-visible::-webkit-datetime-edit-text,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-date-input-visible::-webkit-datetime-edit-month-field,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-date-input-visible::-webkit-datetime-edit-day-field,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-date-input-visible::-webkit-datetime-edit-year-field,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-stage-date-input::-webkit-datetime-edit,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-stage-date-input::-webkit-datetime-edit-fields-wrapper,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-stage-date-input::-webkit-datetime-edit-text,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-stage-date-input::-webkit-datetime-edit-month-field,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-stage-date-input::-webkit-datetime-edit-day-field,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-stage-date-input::-webkit-datetime-edit-year-field {
   color: transparent;
 }
 

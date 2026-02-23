@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Project } from '../../models/project'
 import { Stage } from '../../models/stage'
 import { Task, sortTasksForDisplay } from '../../models/task'
-import { formatDateDisplay, timestampToDate } from '../../utils/dateUtils'
+import { formatDateDisplay, parseDateFromPaste, timestampToDate } from '../../utils/dateUtils'
 import { Icon } from '../ui/Icon'
 import { ProjectDropdownMenu } from './ProjectDropdownMenu'
 import { StageDropdownMenu } from '../stages/StageDropdownMenu'
@@ -184,25 +184,73 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
 
   useEffect(() => {
     if (editingStageDetailsDate !== 'start') return
-    const t = requestAnimationFrame(() => startDateInputRef.current?.focus())
+    const t = requestAnimationFrame(() => {
+      const el = startDateInputRef.current
+      if (el) {
+        el.focus()
+        if ('showPicker' in el && typeof (el as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+          try {
+            (el as HTMLInputElement & { showPicker: () => void }).showPicker()
+          } catch {
+            // ignore
+          }
+        }
+      }
+    })
     return () => cancelAnimationFrame(t)
   }, [editingStageDetailsDate])
 
   useEffect(() => {
     if (editingStageDetailsDate !== 'end') return
-    const t = requestAnimationFrame(() => endDateInputRef.current?.focus())
+    const t = requestAnimationFrame(() => {
+      const el = endDateInputRef.current
+      if (el) {
+        el.focus()
+        if ('showPicker' in el && typeof (el as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+          try {
+            (el as HTMLInputElement & { showPicker: () => void }).showPicker()
+          } catch {
+            // ignore
+          }
+        }
+      }
+    })
     return () => cancelAnimationFrame(t)
   }, [editingStageDetailsDate])
 
   useEffect(() => {
     if (editingDate?.field !== 'end') return
-    const t = requestAnimationFrame(() => endDateInputRefs.current[editingDate.stageId]?.focus())
+    const t = requestAnimationFrame(() => {
+      const el = endDateInputRefs.current[editingDate.stageId]
+      if (el) {
+        el.focus()
+        if ('showPicker' in el && typeof (el as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+          try {
+            (el as HTMLInputElement & { showPicker: () => void }).showPicker()
+          } catch {
+            // ignore
+          }
+        }
+      }
+    })
     return () => cancelAnimationFrame(t)
   }, [editingDate])
 
   useEffect(() => {
     if (editingDate?.field !== 'start') return
-    const t = requestAnimationFrame(() => startDateInputRefs.current[editingDate.stageId]?.focus())
+    const t = requestAnimationFrame(() => {
+      const el = startDateInputRefs.current[editingDate.stageId]
+      if (el) {
+        el.focus()
+        if ('showPicker' in el && typeof (el as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+          try {
+            (el as HTMLInputElement & { showPicker: () => void }).showPicker()
+          } catch {
+            // ignore
+          }
+        }
+      }
+    })
     return () => cancelAnimationFrame(t)
   }, [editingDate])
 
@@ -231,6 +279,40 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
       onStageDateChange?.(stage, timestampToDate(stage.startDate), new Date(e.target.value))
     } else {
       onStageDateChange?.(stage, timestampToDate(stage.startDate), null)
+    }
+  }
+
+  const handleStageDetailsStartDatePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    if (!selectedStageProp) return
+    const value = parseDateFromPaste(e.clipboardData.getData('text'))
+    if (value) {
+      e.preventDefault()
+      onStageDateChange?.(selectedStageProp, new Date(value), timestampToDate(selectedStageProp.endDate))
+    }
+  }
+
+  const handleStageDetailsEndDatePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    if (!selectedStageProp) return
+    const value = parseDateFromPaste(e.clipboardData.getData('text'))
+    if (value) {
+      e.preventDefault()
+      onStageDateChange?.(selectedStageProp, timestampToDate(selectedStageProp.startDate), new Date(value))
+    }
+  }
+
+  const handleStartDatePaste = (stage: Stage, e: React.ClipboardEvent<HTMLInputElement>) => {
+    const value = parseDateFromPaste(e.clipboardData.getData('text'))
+    if (value) {
+      e.preventDefault()
+      onStageDateChange?.(stage, new Date(value), timestampToDate(stage.endDate))
+    }
+  }
+
+  const handleEndDatePaste = (stage: Stage, e: React.ClipboardEvent<HTMLInputElement>) => {
+    const value = parseDateFromPaste(e.clipboardData.getData('text'))
+    if (value) {
+      e.preventDefault()
+      onStageDateChange?.(stage, timestampToDate(stage.startDate), new Date(value))
     }
   }
 
@@ -300,6 +382,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                     value={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : ''}
                     min={undefined}
                     onChange={(e) => handleStartDateChange(selectedStageProp, e)}
+                    onPaste={handleStageDetailsStartDatePaste}
                     onBlur={() => setEditingStageDetailsDate(null)}
                   />
                   {!selectedStageProp.startDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
@@ -319,6 +402,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                     value={selectedStageProp.endDate ? timestampToDate(selectedStageProp.endDate).toISOString().split('T')[0] : ''}
                     min={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : undefined}
                     onChange={(e) => handleEndDateChange(selectedStageProp, e)}
+                    onPaste={handleStageDetailsEndDatePaste}
                     onBlur={() => setEditingStageDetailsDate(null)}
                   />
                   {!selectedStageProp.endDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
@@ -571,6 +655,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                                 value={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : ''}
                                 min={undefined}
                                 onChange={(e) => handleStartDateChange(stage, e)}
+                                onPaste={(e) => handleStartDatePaste(stage, e)}
                                 onBlur={() => setEditingDate(null)}
                               />
                               {!stage.startDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
@@ -596,6 +681,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                                 value={stage.endDate ? timestampToDate(stage.endDate).toISOString().split('T')[0] : ''}
                                 min={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : undefined}
                                 onChange={(e) => handleEndDateChange(stage, e)}
+                                onPaste={(e) => handleEndDatePaste(stage, e)}
                                 onBlur={() => setEditingDate(null)}
                               />
                               {!stage.endDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}

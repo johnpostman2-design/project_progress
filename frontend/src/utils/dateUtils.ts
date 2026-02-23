@@ -41,6 +41,39 @@ export const timestampToDate = (timestamp: Timestamp): Date => {
 }
 
 /**
+ * Парсит строку из буфера в YYYY-MM-DD для input type="date".
+ * Поддерживает: YYYY-MM-DD, DD.MM.YYYY, DD.MM.YY, DD/MM/YYYY.
+ */
+export function parseDateFromPaste(text: string): string | null {
+  const s = text.trim()
+  if (!s) return null
+  // Уже YYYY-MM-DD
+  const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s)
+  if (iso) {
+    const [, y, m, d] = iso
+    const date = new Date(parseInt(y!, 10), parseInt(m!, 10) - 1, parseInt(d!, 10))
+    if (!isNaN(date.getTime())) return `${y}-${m!.padStart(2, '0')}-${d!.padStart(2, '0')}`
+  }
+  // DD.MM.YYYY или DD.MM.YY
+  const dot = /^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/.exec(s)
+  if (dot) {
+    const [, d, m, y] = dot
+    const year = y!.length === 2 ? 2000 + parseInt(y!, 10) : parseInt(y!, 10)
+    const date = new Date(year, parseInt(m!, 10) - 1, parseInt(d!, 10))
+    if (!isNaN(date.getTime())) return `${year}-${m!.padStart(2, '0')}-${d!.padStart(2, '0')}`
+  }
+  // DD/MM/YYYY
+  const slash = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/.exec(s)
+  if (slash) {
+    const [, d, m, y] = slash
+    const year = y!.length === 2 ? 2000 + parseInt(y!, 10) : parseInt(y!, 10)
+    const date = new Date(year, parseInt(m!, 10) - 1, parseInt(d!, 10))
+    if (!isNaN(date.getTime())) return `${year}-${m!.padStart(2, '0')}-${d!.padStart(2, '0')}`
+  }
+  return null
+}
+
+/**
  * Format date for display in format DD.MM.YY
  */
 export const formatDateDisplay = (timestamp?: Timestamp | null): string => {
