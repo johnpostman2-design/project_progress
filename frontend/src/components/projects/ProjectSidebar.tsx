@@ -326,15 +326,18 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
             </div>
             <div className="project-sidebar-dates project-sidebar-stage-dates">
               {editingStageDetailsDate === 'start' ? (
-                <input
-                  ref={startDateInputRef}
-                  type="date"
-                  className="project-sidebar-date-input-visible"
-                  value={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : ''}
-                  min={undefined}
-                  onChange={(e) => handleStartDateChange(selectedStageProp, e)}
-                  onBlur={() => setEditingStageDetailsDate(null)}
-                />
+                <div className="project-sidebar-date-wrap">
+                  <input
+                    ref={startDateInputRef}
+                    type="date"
+                    className="project-sidebar-date-input-visible"
+                    value={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : ''}
+                    min={undefined}
+                    onChange={(e) => handleStartDateChange(selectedStageProp, e)}
+                    onBlur={() => setEditingStageDetailsDate(null)}
+                  />
+                  {!selectedStageProp.startDate && <span className="project-sidebar-date-placeholder">00.00.00</span>}
+                </div>
               ) : (
                 <button type="button" className="project-sidebar-btn-date" onClick={handleStageDetailsStartDateClick}>
                   {formatDateDisplay(selectedStageProp.startDate)}
@@ -342,15 +345,18 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
               )}
               <div className="project-sidebar-date-arrow">→</div>
               {editingStageDetailsDate === 'end' ? (
-                <input
-                  ref={endDateInputRef}
-                  type="date"
-                  className="project-sidebar-date-input-visible"
-                  value={selectedStageProp.endDate ? timestampToDate(selectedStageProp.endDate).toISOString().split('T')[0] : ''}
-                  min={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : undefined}
-                  onChange={(e) => handleEndDateChange(selectedStageProp, e)}
-                  onBlur={() => setEditingStageDetailsDate(null)}
-                />
+                <div className="project-sidebar-date-wrap">
+                  <input
+                    ref={endDateInputRef}
+                    type="date"
+                    className="project-sidebar-date-input-visible"
+                    value={selectedStageProp.endDate ? timestampToDate(selectedStageProp.endDate).toISOString().split('T')[0] : ''}
+                    min={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : undefined}
+                    onChange={(e) => handleEndDateChange(selectedStageProp, e)}
+                    onBlur={() => setEditingStageDetailsDate(null)}
+                  />
+                  {!selectedStageProp.endDate && <span className="project-sidebar-date-placeholder">00.00.00</span>}
+                </div>
               ) : (
                 <button type="button" className="project-sidebar-btn-date" onClick={handleStageDetailsEndDateClick}>
                   {formatDateDisplay(selectedStageProp.endDate)}
@@ -591,15 +597,18 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                           }}
                         >
                           {editingDate?.stageId === stage.id && editingDate?.field === 'start' ? (
-                            <input
-                              ref={(el) => { startDateInputRefs.current[stage.id] = el }}
-                              type="date"
-                              className="project-sidebar-stage-date-input"
-                              value={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : ''}
-                              min={undefined}
-                              onChange={(e) => handleStartDateChange(stage, e)}
-                              onBlur={() => setEditingDate(null)}
-                            />
+                            <div className="project-sidebar-date-wrap">
+                              <input
+                                ref={(el) => { startDateInputRefs.current[stage.id] = el }}
+                                type="date"
+                                className="project-sidebar-stage-date-input"
+                                value={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : ''}
+                                min={undefined}
+                                onChange={(e) => handleStartDateChange(stage, e)}
+                                onBlur={() => setEditingDate(null)}
+                              />
+                              {!stage.startDate && <span className="project-sidebar-date-placeholder">00.00.00</span>}
+                            </div>
                           ) : (
                             <button
                               className="project-sidebar-stage-date-button"
@@ -613,15 +622,18 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                             <Icon name="arrow-right" size={16} className="project-sidebar-stage-arrow-icon" />
                           </div>
                           {editingDate?.stageId === stage.id && editingDate?.field === 'end' ? (
-                            <input
-                              ref={(el) => { endDateInputRefs.current[stage.id] = el }}
-                              type="date"
-                              className="project-sidebar-stage-date-input"
-                              value={stage.endDate ? timestampToDate(stage.endDate).toISOString().split('T')[0] : ''}
-                              min={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : undefined}
-                              onChange={(e) => handleEndDateChange(stage, e)}
-                              onBlur={() => setEditingDate(null)}
-                            />
+                            <div className="project-sidebar-date-wrap">
+                              <input
+                                ref={(el) => { endDateInputRefs.current[stage.id] = el }}
+                                type="date"
+                                className="project-sidebar-stage-date-input"
+                                value={stage.endDate ? timestampToDate(stage.endDate).toISOString().split('T')[0] : ''}
+                                min={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : undefined}
+                                onChange={(e) => handleEndDateChange(stage, e)}
+                                onBlur={() => setEditingDate(null)}
+                              />
+                              {!stage.endDate && <span className="project-sidebar-date-placeholder">00.00.00</span>}
+                            </div>
                           ) : (
                             <button
                               className="project-sidebar-stage-date-button"

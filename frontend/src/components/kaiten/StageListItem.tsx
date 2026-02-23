@@ -203,15 +203,18 @@ export const StageListItem: React.FC<StageListItemProps> = ({
               className="stage-list-item-dates"
             >
               {editingStartDate ? (
-                <input
-                  ref={startDateInputRef}
-                  type="date"
-                  className="stage-list-item-date-input"
-                  value={startDate ? startDate.toISOString().split('T')[0] : ''}
-                  min={undefined}
-                  onChange={handleStartDateChange}
-                  onBlur={() => setEditingStartDate(false)}
-                />
+                <div className="stage-list-item-date-wrap">
+                  <input
+                    ref={startDateInputRef}
+                    type="date"
+                    className="stage-list-item-date-input"
+                    value={startDate ? startDate.toISOString().split('T')[0] : ''}
+                    min={undefined}
+                    onChange={handleStartDateChange}
+                    onBlur={() => setEditingStartDate(false)}
+                  />
+                  {!startDate && <span className="stage-list-item-date-placeholder">00.00.00</span>}
+                </div>
               ) : (
                 <button
                   className="stage-list-item-date-button"
@@ -225,15 +228,18 @@ export const StageListItem: React.FC<StageListItemProps> = ({
                 <Icon name="arrow-right" size={16} className="stage-list-item-arrow-icon" />
               </div>
               {editingEndDate ? (
-                <input
-                  ref={endDateInputRef}
-                  type="date"
-                  className="stage-list-item-date-input"
-                  value={endDate ? endDate.toISOString().split('T')[0] : ''}
-                  min={startDate ? startDate.toISOString().split('T')[0] : undefined}
-                  onChange={handleEndDateChange}
-                  onBlur={() => setEditingEndDate(false)}
-                />
+                <div className="stage-list-item-date-wrap">
+                  <input
+                    ref={endDateInputRef}
+                    type="date"
+                    className="stage-list-item-date-input"
+                    value={endDate ? endDate.toISOString().split('T')[0] : ''}
+                    min={startDate ? startDate.toISOString().split('T')[0] : undefined}
+                    onChange={handleEndDateChange}
+                    onBlur={() => setEditingEndDate(false)}
+                  />
+                  {!endDate && <span className="stage-list-item-date-placeholder">00.00.00</span>}
+                </div>
               ) : (
                 <button
                   className="stage-list-item-date-button"
