@@ -95,8 +95,9 @@ export const Dashboard: React.FC = () => {
   const [pendingDeleteAll, setPendingDeleteAll] = useState(false)
   const deleteToastRef = React.useRef<DeleteToastRef>(null)
   const [renameSaveLoading, setRenameSaveLoading] = useState(false)
-  // Защита от повторных вызовов getCardsByBoard: один раз на boardId при первом появлении
-  const loadedBoardIdsRef = useRef<Set<string>>(new Set())
+  // Cooldown между авто-синхронизациями по projectId (мс), чтобы не дергать API при повторных запусках эффекта
+  const lastSyncByProjectRef = useRef<Record<string, number>>({})
+  const SYNC_COOLDOWN_MS = 15_000
 
   // Auto-sync on focus/return to app (только проекты с привязанной доской Kaiten)
   useEffect(() => {
@@ -167,34 +168,34 @@ export const Dashboard: React.FC = () => {
     }
   }, [projects])
 
-  // Авто-синхронизация задач из Kaiten при загрузке страницы и при появлении проектов/конфига
+  // Авто-синхронизация задач из Kaiten при загрузке страницы (запуск после появления проектов и конфига)
   useEffect(() => {
     if (!kaitenConfig || projects.length === 0) return
 
     const projectsWithBoard = projects.filter((p) => p.kaitenBoardId != null && String(p.kaitenBoardId).trim() !== '')
     if (projectsWithBoard.length === 0) return
 
-    projectsWithBoard.forEach((project) => {
-      const boardIdKey = String(project.kaitenBoardId)
-      if (loadedBoardIdsRef.current.has(boardIdKey)) return
-      loadedBoardIdsRef.current.add(boardIdKey)
+    const runSync = () => {
+      const now = Date.now()
+      projectsWithBoard.forEach((project) => {
+        const last = lastSyncByProjectRef.current[project.id] ?? 0
+        if (now - last < SYNC_COOLDOWN_MS) return
 
-      syncProject(project)
-        .then((projectTasks) => {
-          setTasks((prev) => ({ ...prev, [project.id]: projectTasks }))
-        })
-        .catch((error) => {
-          console.error(`Failed to sync tasks for project ${project.id}:`, error)
-          loadedBoardIdsRef.current.delete(boardIdKey)
-          setTasks((prev) => ({ ...prev, [project.id]: prev[project.id] ?? [] }))
-        })
-    })
-
-    return () => {
-      projectsWithBoard.forEach((p) => {
-        if (p.kaitenBoardId != null) loadedBoardIdsRef.current.delete(String(p.kaitenBoardId))
+        lastSyncByProjectRef.current[project.id] = now
+        syncProject(project)
+          .then((projectTasks) => {
+            setTasks((prev) => ({ ...prev, [project.id]: projectTasks }))
+          })
+          .catch((error) => {
+            console.error(`Failed to sync tasks for project ${project.id}:`, error)
+            delete lastSyncByProjectRef.current[project.id]
+            setTasks((prev) => ({ ...prev, [project.id]: prev[project.id] ?? [] }))
+          })
       })
     }
+
+    const t = setTimeout(runSync, 0)
+    return () => clearTimeout(t)
   }, [projects, kaitenConfig, syncProject])
 
   // Задачи из Kaiten без подмены — прогресс считается по isCompleted из API
@@ -298,9 +299,9 @@ export const Dashboard: React.FC = () => {
         console.log('[Dashboard] Updated project loaded:', updatedProject.id)
       }
 
-      // Sync tasks (один раз; ref помечает boardId как загруженный)
-      if (updatedProject!.kaitenBoardId) {
-        loadedBoardIdsRef.current.add(String(updatedProject!.kaitenBoardId))
+      // Пометить проект как только что синхронизированный, чтобы эффект не дергал API повторно
+      if (updatedProject!.id) {
+        lastSyncByProjectRef.current[updatedProject!.id] = Date.now()
       }
       console.log('[Dashboard] Syncing tasks...')
       const syncedTasks = await syncProject(updatedProject!)
@@ -381,8 +382,8 @@ export const Dashboard: React.FC = () => {
                           setShowSidebar(true)
                           const newStages = await getStages(projectId)
                           setStagesMap(prev => ({ ...prev, [projectId]: newStages }))
-                          if (newProject.kaitenBoardId) {
-                            loadedBoardIdsRef.current.add(String(newProject.kaitenBoardId))
+                          if (newProject.id) {
+                            lastSyncByProjectRef.current[newProject.id] = Date.now()
                           }
                           const projectTasks = await syncProject(newProject)
                           setTasks(prev => ({ ...prev, [projectId]: projectTasks }))
