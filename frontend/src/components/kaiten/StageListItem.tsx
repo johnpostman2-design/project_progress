@@ -91,29 +91,19 @@ export const StageListItem: React.FC<StageListItemProps> = ({
   const endDateInputRef = React.useRef<HTMLInputElement>(null)
 
   React.useEffect(() => {
-    if (editingStartDate && startDateInputRef.current) {
-      startDateInputRef.current.focus()
-      if ('showPicker' in startDateInputRef.current && typeof (startDateInputRef.current as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
-        try {
-          (startDateInputRef.current as HTMLInputElement & { showPicker: () => void }).showPicker()
-        } catch {
-          // ignore
-        }
-      }
-    }
+    if (!editingStartDate) return
+    const t = requestAnimationFrame(() => {
+      startDateInputRef.current?.focus()
+    })
+    return () => cancelAnimationFrame(t)
   }, [editingStartDate])
 
   React.useEffect(() => {
-    if (editingEndDate && endDateInputRef.current) {
-      endDateInputRef.current.focus()
-      if ('showPicker' in endDateInputRef.current && typeof (endDateInputRef.current as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
-        try {
-          (endDateInputRef.current as HTMLInputElement & { showPicker: () => void }).showPicker()
-        } catch {
-          // ignore
-        }
-      }
-    }
+    if (!editingEndDate) return
+    const t = requestAnimationFrame(() => {
+      endDateInputRef.current?.focus()
+    })
+    return () => cancelAnimationFrame(t)
   }, [editingEndDate])
 
   const handleStartDateClick = (e: React.MouseEvent) => {
@@ -203,7 +193,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
               className="stage-list-item-dates"
             >
               {editingStartDate ? (
-                <div className="stage-list-item-date-wrap">
+                <div className={`stage-list-item-date-wrap${!startDate ? ' date-input-empty' : ''}`}>
                   <input
                     ref={startDateInputRef}
                     type="date"
@@ -213,7 +203,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
                     onChange={handleStartDateChange}
                     onBlur={() => setEditingStartDate(false)}
                   />
-                  {!startDate && <span className="stage-list-item-date-placeholder">00.00.00</span>}
+                  {!startDate && <span className="stage-list-item-date-placeholder">00.00.0000</span>}
                 </div>
               ) : (
                 <button
@@ -228,7 +218,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
                 <Icon name="arrow-right" size={16} className="stage-list-item-arrow-icon" />
               </div>
               {editingEndDate ? (
-                <div className="stage-list-item-date-wrap">
+                <div className={`stage-list-item-date-wrap${!endDate ? ' date-input-empty' : ''}`}>
                   <input
                     ref={endDateInputRef}
                     type="date"
@@ -238,7 +228,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
                     onChange={handleEndDateChange}
                     onBlur={() => setEditingEndDate(false)}
                   />
-                  {!endDate && <span className="stage-list-item-date-placeholder">00.00.00</span>}
+                  {!endDate && <span className="stage-list-item-date-placeholder">00.00.0000</span>}
                 </div>
               ) : (
                 <button

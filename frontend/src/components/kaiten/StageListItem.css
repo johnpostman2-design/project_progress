@@ -128,6 +128,11 @@
   cursor: pointer;
 }
 
+/* Скрыть нативный плейсхолдер (dd.mm.yyyy), когда показываем свой 00.00.00 */
+.stage-list-item-date-wrap.date-input-empty .stage-list-item-date-input::-webkit-datetime-edit {
+  color: transparent;
+}
+
 .stage-list-item-date-placeholder {
   position: absolute;
   left: 0;

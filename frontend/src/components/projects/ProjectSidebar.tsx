@@ -183,61 +183,27 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
   const endDateInputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
   useEffect(() => {
-    if (editingStageDetailsDate === 'start' && startDateInputRef.current) {
-      startDateInputRef.current.focus()
-      if ('showPicker' in startDateInputRef.current && typeof (startDateInputRef.current as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
-        try {
-          (startDateInputRef.current as HTMLInputElement & { showPicker: () => void }).showPicker()
-        } catch {
-          // ignore
-        }
-      }
-    }
+    if (editingStageDetailsDate !== 'start') return
+    const t = requestAnimationFrame(() => startDateInputRef.current?.focus())
+    return () => cancelAnimationFrame(t)
   }, [editingStageDetailsDate])
 
   useEffect(() => {
-    if (editingStageDetailsDate === 'end' && endDateInputRef.current) {
-      endDateInputRef.current.focus()
-      if ('showPicker' in endDateInputRef.current && typeof (endDateInputRef.current as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
-        try {
-          (endDateInputRef.current as HTMLInputElement & { showPicker: () => void }).showPicker()
-        } catch {
-          // ignore
-        }
-      }
-    }
+    if (editingStageDetailsDate !== 'end') return
+    const t = requestAnimationFrame(() => endDateInputRef.current?.focus())
+    return () => cancelAnimationFrame(t)
   }, [editingStageDetailsDate])
 
   useEffect(() => {
-    if (editingDate && endDateInputRefs.current[editingDate.stageId] && editingDate.field === 'end') {
-      const inputRef = endDateInputRefs.current[editingDate.stageId]
-      if (inputRef) {
-        inputRef.focus()
-        if ('showPicker' in inputRef && typeof (inputRef as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
-          try {
-            (inputRef as HTMLInputElement & { showPicker: () => void }).showPicker()
-          } catch {
-            // ignore
-          }
-        }
-      }
-    }
+    if (editingDate?.field !== 'end') return
+    const t = requestAnimationFrame(() => endDateInputRefs.current[editingDate.stageId]?.focus())
+    return () => cancelAnimationFrame(t)
   }, [editingDate])
 
   useEffect(() => {
-    if (editingDate && startDateInputRefs.current[editingDate.stageId] && editingDate.field === 'start') {
-      const inputRef = startDateInputRefs.current[editingDate.stageId]
-      if (inputRef) {
-        inputRef.focus()
-        if ('showPicker' in inputRef && typeof (inputRef as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
-          try {
-            (inputRef as HTMLInputElement & { showPicker: () => void }).showPicker()
-          } catch {
-            // ignore
-          }
-        }
-      }
-    }
+    if (editingDate?.field !== 'start') return
+    const t = requestAnimationFrame(() => startDateInputRefs.current[editingDate.stageId]?.focus())
+    return () => cancelAnimationFrame(t)
   }, [editingDate])
 
   const handleStartDateClick = (stage: Stage, e: React.MouseEvent) => {
@@ -326,7 +292,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
             </div>
             <div className="project-sidebar-dates project-sidebar-stage-dates">
               {editingStageDetailsDate === 'start' ? (
-                <div className="project-sidebar-date-wrap">
+                <div className={`project-sidebar-date-wrap${!selectedStageProp.startDate ? ' date-input-empty' : ''}`}>
                   <input
                     ref={startDateInputRef}
                     type="date"
@@ -336,7 +302,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                     onChange={(e) => handleStartDateChange(selectedStageProp, e)}
                     onBlur={() => setEditingStageDetailsDate(null)}
                   />
-                  {!selectedStageProp.startDate && <span className="project-sidebar-date-placeholder">00.00.00</span>}
+                  {!selectedStageProp.startDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
                 </div>
               ) : (
                 <button type="button" className="project-sidebar-btn-date" onClick={handleStageDetailsStartDateClick}>
@@ -345,7 +311,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
               )}
               <div className="project-sidebar-date-arrow">→</div>
               {editingStageDetailsDate === 'end' ? (
-                <div className="project-sidebar-date-wrap">
+                <div className={`project-sidebar-date-wrap${!selectedStageProp.endDate ? ' date-input-empty' : ''}`}>
                   <input
                     ref={endDateInputRef}
                     type="date"
@@ -355,7 +321,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                     onChange={(e) => handleEndDateChange(selectedStageProp, e)}
                     onBlur={() => setEditingStageDetailsDate(null)}
                   />
-                  {!selectedStageProp.endDate && <span className="project-sidebar-date-placeholder">00.00.00</span>}
+                  {!selectedStageProp.endDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
                 </div>
               ) : (
                 <button type="button" className="project-sidebar-btn-date" onClick={handleStageDetailsEndDateClick}>
@@ -597,7 +563,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                           }}
                         >
                           {editingDate?.stageId === stage.id && editingDate?.field === 'start' ? (
-                            <div className="project-sidebar-date-wrap">
+                            <div className={`project-sidebar-date-wrap${!stage.startDate ? ' date-input-empty' : ''}`}>
                               <input
                                 ref={(el) => { startDateInputRefs.current[stage.id] = el }}
                                 type="date"
@@ -607,7 +573,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                                 onChange={(e) => handleStartDateChange(stage, e)}
                                 onBlur={() => setEditingDate(null)}
                               />
-                              {!stage.startDate && <span className="project-sidebar-date-placeholder">00.00.00</span>}
+                              {!stage.startDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
                             </div>
                           ) : (
                             <button
@@ -622,7 +588,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                             <Icon name="arrow-right" size={16} className="project-sidebar-stage-arrow-icon" />
                           </div>
                           {editingDate?.stageId === stage.id && editingDate?.field === 'end' ? (
-                            <div className="project-sidebar-date-wrap">
+                            <div className={`project-sidebar-date-wrap${!stage.endDate ? ' date-input-empty' : ''}`}>
                               <input
                                 ref={(el) => { endDateInputRefs.current[stage.id] = el }}
                                 type="date"
@@ -632,7 +598,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                                 onChange={(e) => handleEndDateChange(stage, e)}
                                 onBlur={() => setEditingDate(null)}
                               />
-                              {!stage.endDate && <span className="project-sidebar-date-placeholder">00.00.00</span>}
+                              {!stage.endDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
                             </div>
                           ) : (
                             <button

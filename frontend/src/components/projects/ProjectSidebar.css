@@ -494,6 +494,12 @@
   cursor: pointer;
 }
 
+/* Скрыть нативный плейсхолдер (dd.mm.yyyy), когда показываем свой 00.00.00 */
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-date-input-visible::-webkit-datetime-edit,
+.project-sidebar-date-wrap.date-input-empty .project-sidebar-stage-date-input::-webkit-datetime-edit {
+  color: transparent;
+}
+
 .project-sidebar-date-placeholder {
   position: absolute;
   left: 0;
