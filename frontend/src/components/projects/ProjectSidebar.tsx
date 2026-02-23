@@ -550,7 +550,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                             ref={(el) => { startDateInputRefs.current[stage.id] = el }}
                             type="date"
                             value={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : ''}
-                            min={project.startDate ? timestampToDate(project.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
+                            min={undefined}
                             onChange={(e) => handleStartDateChange(stage, e)}
                             style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }}
                             tabIndex={-1}
@@ -569,7 +569,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                             ref={(el) => { endDateInputRefs.current[stage.id] = el }}
                             type="date"
                             value={stage.endDate ? timestampToDate(stage.endDate).toISOString().split('T')[0] : ''}
-                            min={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : project.startDate ? timestampToDate(project.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
+                            min={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : undefined}
                             onChange={(e) => handleEndDateChange(stage, e)}
                             style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }}
                             tabIndex={-1}
