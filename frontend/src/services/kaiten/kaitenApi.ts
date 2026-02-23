@@ -1,6 +1,5 @@
 import {
   KaitenBoard,
-  KaitenSpace,
   KaitenGroup,
   KaitenCard,
   KaitenCardsResponse,
@@ -66,34 +65,22 @@ const apiRequest = async <T>(
 }
 
 export const getBoards = async (config: KaitenConfig): Promise<KaitenBoard[]> => {
-  return withRetry(async () => {
-    const spaces = await apiRequest<KaitenSpace[]>('/spaces', config)
-    if (!Array.isArray(spaces)) {
-      throw new KaitenApiError('Неверный формат ответа от /spaces', 500)
+  const raw = await apiRequest<unknown>('/boards', config)
+  const list = Array.isArray(raw) ? raw : (raw && typeof raw === 'object' && 'data' in raw && Array.isArray((raw as { data: unknown }).data)) ? (raw as { data: unknown[] }).data : []
+  if (!Array.isArray(list)) {
+    throw new KaitenApiError('Неверный формат ответа от /boards', 500)
+  }
+  return list.map((board: Record<string, unknown>) => {
+    const space = board.space && typeof board.space === 'object' ? (board.space as { id?: unknown }) : null
+    const spaceId = board.space_id != null ? Number(board.space_id) : (space?.id != null ? Number(space.id) : undefined)
+    return {
+      id: Number(board.id),
+      name: (board.name as string) || (board.title as string) || `Доска #${board.id}`,
+      description: (board.description as string) ?? null,
+      created_at: (board.created_at as string) || new Date().toISOString(),
+      updated_at: (board.updated_at as string) || new Date().toISOString(),
+      space_id: spaceId,
     }
-    const boardsPerSpace = await Promise.all(
-      spaces.map((space) =>
-        apiRequest<any[]>(`/spaces/${space.id}/boards`, config).then((spaceBoards) => ({
-          space,
-          spaceBoards: Array.isArray(spaceBoards) ? spaceBoards : [],
-        }))
-      )
-    )
-    const allBoardsMap = new Map<number, KaitenBoard>()
-    for (const { space, spaceBoards } of boardsPerSpace) {
-      for (const board of spaceBoards) {
-        if (allBoardsMap.has(board.id)) continue
-        allBoardsMap.set(board.id, {
-          id: board.id,
-          name: board.name || board.title || `Доска #${board.id}`,
-          description: board.description ?? null,
-          created_at: board.created_at || new Date().toISOString(),
-          updated_at: board.updated_at || new Date().toISOString(),
-          space_id: space.id,
-        })
-      }
-    }
-    return Array.from(allBoardsMap.values())
   })
 }
 
