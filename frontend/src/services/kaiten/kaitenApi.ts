@@ -103,16 +103,52 @@ export const getBoards = async (config: KaitenConfig): Promise<KaitenBoard[]> =>
   return boards
 }
 
+type GroupLike = {
+  id: number
+  name?: string
+  title?: string
+  board_id?: number
+  position?: number
+  order?: number
+  created_at?: string
+  updated_at?: string
+}
+
+function toKaitenGroup(item: GroupLike, boardId: number): KaitenGroup {
+  return {
+    id: item.id,
+    name: item.name || item.title || '',
+    board_id: item.board_id ?? boardId,
+    position: item.position ?? item.order ?? 0,
+    created_at: item.created_at ?? new Date().toISOString(),
+    updated_at: item.updated_at ?? new Date().toISOString(),
+  }
+}
+
 export const getBoardGroups = async (
   boardId: number,
   config: KaitenConfig
 ): Promise<KaitenGroup[]> => {
-  return withRetry(async () => {
-    if (!boardId || isNaN(boardId)) {
-      throw new KaitenApiError(`Неверный ID доски: ${boardId}`, 400)
-    }
-    return apiRequest<KaitenGroup[]>(`/boards/${boardId}/groups`, config)
-  })
+  if (!boardId || isNaN(boardId)) {
+    throw new KaitenApiError(`Неверный ID доски: ${boardId}`, 400)
+  }
+  const map = (list: unknown) =>
+    Array.isArray(list) ? list.map((item: GroupLike) => toKaitenGroup(item, boardId)) : []
+
+  try {
+    const data = await apiRequest<unknown>(`/boards/${boardId}/groups`, config)
+    return map(data)
+  } catch (e) {
+    if (!(e instanceof KaitenApiError) || e.statusCode !== 404) throw e
+  }
+  try {
+    const data = await apiRequest<unknown>(`/boards/${boardId}/lanes`, config)
+    return map(data)
+  } catch (e) {
+    if (!(e instanceof KaitenApiError) || e.statusCode !== 404) throw e
+  }
+  const data = await apiRequest<unknown>(`/boards/${boardId}/columns`, config)
+  return map(data)
 }
 
 /**
