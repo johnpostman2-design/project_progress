@@ -8,6 +8,18 @@ import {
   KaitenConfig,
 } from './kaitenTypes'
 
+interface SpaceFromApi {
+  id: number
+  boards?: Array<{
+    id: number
+    name?: string
+    title?: string
+    description?: string | null
+    created_at?: string
+    updated_at?: string
+  }>
+}
+
 // Default retry configuration
 const MAX_RETRIES = 3
 const RETRY_DELAY = 1000 // ms
@@ -64,35 +76,31 @@ const apiRequest = async <T>(
   }
 }
 
-interface SpaceWithBoards {
-  id: number
-  boards?: Array<{
-    id: number
-    name?: string
-    title?: string
-    description?: string | null
-    created_at?: string
-    updated_at?: string
-  }>
-}
-
 export const getBoards = async (config: KaitenConfig): Promise<KaitenBoard[]> => {
-  const spaces = await apiRequest<SpaceWithBoards[]>('/spaces?expand=boards', config)
-  if (!Array.isArray(spaces) || spaces.length === 0) {
-    throw new KaitenApiError('No spaces returned', 500)
+  const spaces = await apiRequest<SpaceFromApi[]>('/spaces', config)
+
+  if (!Array.isArray(spaces)) {
+    throw new KaitenApiError('Invalid /spaces response', 500)
   }
-  const space = spaces[0]
-  if (!Array.isArray(space.boards)) {
-    throw new KaitenApiError('No boards in expanded space', 500)
+
+  const boards: KaitenBoard[] = []
+
+  for (const space of spaces) {
+    if (Array.isArray(space.boards)) {
+      for (const board of space.boards) {
+        boards.push({
+          id: board.id,
+          name: board.name || board.title || `Board #${board.id}`,
+          description: board.description ?? null,
+          created_at: board.created_at ?? new Date().toISOString(),
+          updated_at: board.updated_at ?? new Date().toISOString(),
+          space_id: space.id,
+        })
+      }
+    }
   }
-  return space.boards.map((board) => ({
-    id: board.id,
-    name: board.name || board.title || `Доска #${board.id}`,
-    description: board.description ?? null,
-    created_at: board.created_at ?? new Date().toISOString(),
-    updated_at: board.updated_at ?? new Date().toISOString(),
-    space_id: space.id,
-  }))
+
+  return boards
 }
 
 export const getBoardGroups = async (
