@@ -491,6 +491,7 @@
 
 .project-sidebar-date-input-visible::-webkit-calendar-picker-indicator,
 .project-sidebar-stage-date-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
   cursor: pointer;
 }
 
@@ -617,18 +618,21 @@
   padding: var(--spacing-4) 0;
 }
 
-/* По 228:483: не выполнена — отключённый Done (content/tertiary) */
+/* Не выполнена — иконка content/tertiary (Figma 516:2475) */
 .project-sidebar-stage-task-icon {
+  flex-shrink: 0;
   color: var(--content-tertiary);
 }
+.project-sidebar-stage-task-icon svg {
+  fill: currentColor;
+}
 
-/* По 228:483: выполнена — активный Done (content/success) */
+/* Выполнена — иконка content/success (Figma 516:2476) */
 .project-sidebar-stage-task-item.completed .project-sidebar-stage-task-icon {
   color: var(--content-success);
 }
 
-/* Текст задачи: Caption/medium, content/secondary — 228:483 */
-/* По макету: одна строка, при переполнении — троеточие */
+/* Текст задачи: Caption/medium (Figma 516:2475, 516:2476) */
 .project-sidebar-stage-task-title {
   flex: 1;
   min-width: 0;
@@ -640,4 +644,10 @@
   font-size: var(--font-size-caption);
   line-height: var(--line-height-caption);
   color: var(--content-secondary);
+}
+
+/* Выполненная задача — перечёркнутый текст, приглушённый цвет (Figma 516:2476) */
+.project-sidebar-stage-task-item.completed .project-sidebar-stage-task-title {
+  text-decoration: line-through;
+  color: var(--content-tertiary);
 }
