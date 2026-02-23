@@ -44,15 +44,21 @@ export const KaitenBoardSelector: React.FC<KaitenBoardSelectorProps> = ({
       return name.includes(query) || description.includes(query) || idStr.includes(query)
     })
 
-    // Сортировка: точное совпадение названия/ID → начало названия/ID → вхождение в название → остальные
+    // Сортировка: при вводе числа — доска с этим ID всегда первая; иначе точное совпадение названия/ID → начало → вхождение
+    const queryTrimmed = searchQuery.trim()
+    const isNumericId = queryTrimmed !== '' && /^\d+$/.test(queryTrimmed)
+    const idNum = isNumericId ? Number(queryTrimmed) : null
+
     return [...filtered].sort((a, b) => {
       const score = (board: KaitenBoard) => {
         const n = (board.name || '').toLowerCase()
-        const id = String(board.id)
-        if (n === query || id === query) return 0
-        if (n.startsWith(query) || id.startsWith(query)) return 1
-        if (n.includes(query)) return 2
-        return 3
+        const idStr = String(board.id)
+        const exactIdMatch = idNum !== null && (Number(board.id) === idNum || idStr === queryTrimmed)
+        if (exactIdMatch) return 0
+        if (n === query || idStr === query) return 1
+        if (n.startsWith(query) || idStr.startsWith(queryTrimmed)) return 2
+        if (n.includes(query)) return 3
+        return 4
       }
       return score(a) - score(b)
     })
