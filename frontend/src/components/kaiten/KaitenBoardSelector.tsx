@@ -66,15 +66,20 @@ export const KaitenBoardSelector: React.FC<KaitenBoardSelectorProps> = ({
     return ''
   }, [isOpen, searchQuery, selectedBoardName, selectedBoard])
 
-  const filteredBoards = boards.filter((board) => {
-    if (!searchQuery) return true
-    const query = searchQuery.toLowerCase()
-    const boardName = board.name || ''
-    return (
-      boardName.toLowerCase().includes(query) ||
-      String(board.id).includes(searchQuery)
-    )
-  })
+  const filteredBoards = React.useMemo(() => {
+    const query = searchQuery.trim().toLowerCase()
+    if (!query) return boards
+
+    const words = query.split(/\s+/).filter(Boolean)
+    return boards.filter((board) => {
+      const name = (board.name || '').toLowerCase()
+      const description = (board.description ?? '').toLowerCase()
+      const idStr = String(board.id).toLowerCase()
+      const searchable = `${name} ${description} ${idStr}`
+
+      return words.every((word) => searchable.includes(word))
+    })
+  }, [boards, searchQuery])
 
   if (loading) {
     return <div className={`kaiten-board-selector loading ${className}`}>Загрузка досок...</div>
