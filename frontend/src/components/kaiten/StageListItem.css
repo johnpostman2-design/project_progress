@@ -67,13 +67,21 @@
   flex-shrink: 0;
 }
 
-.stage-list-item-date-button {
+.stage-list-item-dates {
+  display: flex;
+  gap: var(--spacing-4, 4px);
+  align-items: center;
+}
+
+.stage-list-item-date-button,
+.stage-list-item-date-input {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--spacing-8, 8px) var(--spacing-4, 4px);
   width: 61px;
-  height: auto;
+  height: 32px;
+  box-sizing: border-box;
   background: var(--surface-primary-main, white);
   border: none;
   border-radius: var(--radius-s, 4px);
@@ -82,9 +90,21 @@
   line-height: var(--line-height-caption, 14px);
   font-weight: 400;
   color: var(--content-secondary, rgba(0, 0, 0, 0.6));
-  cursor: pointer;
   flex-shrink: 0;
+}
+
+.stage-list-item-date-button {
+  cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
+}
+
+.stage-list-item-date-input {
+  cursor: text;
+  outline: none;
+}
+
+.stage-list-item-date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
 }
 
 .stage-list-item-date-button:hover {

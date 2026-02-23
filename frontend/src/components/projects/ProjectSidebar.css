@@ -460,6 +460,37 @@
   height: 0;
 }
 
+.project-sidebar-date-input-visible,
+.project-sidebar-stage-date-input {
+  box-sizing: border-box;
+  min-width: 61px;
+  width: 61px;
+  height: 32px;
+  padding: var(--spacing-8) var(--spacing-4);
+  background: var(--surface-primary-main);
+  border: none;
+  border-radius: var(--radius-s);
+  font-family: var(--font-family);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: 400;
+  color: var(--content-secondary);
+  flex-shrink: 0;
+  cursor: text;
+  outline: none;
+}
+
+.project-sidebar-date-input-visible::-webkit-calendar-picker-indicator,
+.project-sidebar-stage-date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+.project-sidebar-stage-dates-inner {
+  display: flex;
+  gap: var(--spacing-4, 4px);
+  align-items: center;
+}
+
 /* Default: белый фон, вторичный цвет текста (Figma 228:116) */
 .project-sidebar-btn-date {
   display: flex;

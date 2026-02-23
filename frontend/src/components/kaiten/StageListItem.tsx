@@ -31,6 +31,8 @@ export const StageListItem: React.FC<StageListItemProps> = ({
   const [isEditing, setIsEditing] = useState(false)
   const [hoveredArea, setHoveredArea] = useState<'name' | 'dates' | null>(null)
   const [editedName, setEditedName] = useState(stage.name)
+  const [editingStartDate, setEditingStartDate] = useState(false)
+  const [editingEndDate, setEditingEndDate] = useState(false)
   
   // Показываем кнопку удаления если наведено на область названия
   // Показываем даты если наведено на область дат или ничего не наведено
@@ -88,46 +90,42 @@ export const StageListItem: React.FC<StageListItemProps> = ({
   const startDateInputRef = React.useRef<HTMLInputElement>(null)
   const endDateInputRef = React.useRef<HTMLInputElement>(null)
 
+  React.useEffect(() => {
+    if (editingStartDate && startDateInputRef.current) {
+      startDateInputRef.current.focus()
+      if ('showPicker' in startDateInputRef.current && typeof (startDateInputRef.current as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+        try {
+          (startDateInputRef.current as HTMLInputElement & { showPicker: () => void }).showPicker()
+        } catch {
+          // ignore
+        }
+      }
+    }
+  }, [editingStartDate])
+
+  React.useEffect(() => {
+    if (editingEndDate && endDateInputRef.current) {
+      endDateInputRef.current.focus()
+      if ('showPicker' in endDateInputRef.current && typeof (endDateInputRef.current as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+        try {
+          (endDateInputRef.current as HTMLInputElement & { showPicker: () => void }).showPicker()
+        } catch {
+          // ignore
+        }
+      }
+    }
+  }, [editingEndDate])
+
   const handleStartDateClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (startDateInputRef.current) {
-      // Используем showPicker если доступно (современные браузеры)
-      if ('showPicker' in startDateInputRef.current && typeof (startDateInputRef.current as any).showPicker === 'function') {
-        try {
-          (startDateInputRef.current as any).showPicker()
-        } catch (err) {
-          // Если showPicker не поддерживается, используем клик
-          startDateInputRef.current.focus()
-          startDateInputRef.current.click()
-        }
-      } else {
-        // Для старых браузеров
-        startDateInputRef.current.focus()
-        startDateInputRef.current.click()
-      }
-    }
+    setEditingStartDate(true)
   }
 
   const handleEndDateClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (endDateInputRef.current) {
-      // Используем showPicker если доступно (современные браузеры)
-      if ('showPicker' in endDateInputRef.current && typeof (endDateInputRef.current as any).showPicker === 'function') {
-        try {
-          (endDateInputRef.current as any).showPicker()
-        } catch (err) {
-          // Если showPicker не поддерживается, используем клик
-          endDateInputRef.current.focus()
-          endDateInputRef.current.click()
-        }
-      } else {
-        // Для старых браузеров
-        endDateInputRef.current.focus()
-        endDateInputRef.current.click()
-      }
-    }
+    setEditingEndDate(true)
   }
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,45 +200,49 @@ export const StageListItem: React.FC<StageListItemProps> = ({
             <div
               onMouseEnter={() => setHoveredArea('dates')}
               onMouseLeave={() => setHoveredArea(null)}
-              style={{ display: 'flex', gap: 'var(--spacing-4, 4px)', alignItems: 'center' }}
+              className="stage-list-item-dates"
             >
-              <input
-                ref={startDateInputRef}
-                type="date"
-                value={startDate ? startDate.toISOString().split('T')[0] : ''}
-                min={undefined}
-                onChange={handleStartDateChange}
-                style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }}
-                tabIndex={-1}
-              />
-              <button
-                className="stage-list-item-date-button"
-                onClick={handleStartDateClick}
-                type="button"
-                data-node-id="228:116"
-              >
-                {formatDate(startDate)}
-              </button>
-              <div className="stage-list-item-arrow" data-node-id="247:2207">
+              {editingStartDate ? (
+                <input
+                  ref={startDateInputRef}
+                  type="date"
+                  className="stage-list-item-date-input"
+                  value={startDate ? startDate.toISOString().split('T')[0] : ''}
+                  min={undefined}
+                  onChange={handleStartDateChange}
+                  onBlur={() => setEditingStartDate(false)}
+                />
+              ) : (
+                <button
+                  className="stage-list-item-date-button"
+                  onClick={handleStartDateClick}
+                  type="button"
+                >
+                  {formatDate(startDate)}
+                </button>
+              )}
+              <div className="stage-list-item-arrow">
                 <Icon name="arrow-right" size={16} className="stage-list-item-arrow-icon" />
               </div>
-              <input
-                ref={endDateInputRef}
-                type="date"
-                value={endDate ? endDate.toISOString().split('T')[0] : ''}
-                min={startDate ? startDate.toISOString().split('T')[0] : undefined}
-                onChange={handleEndDateChange}
-                style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }}
-                tabIndex={-1}
-              />
-              <button
-                className="stage-list-item-date-button"
-                onClick={handleEndDateClick}
-                type="button"
-                data-node-id="228:116"
-              >
-                {formatDate(endDate)}
-              </button>
+              {editingEndDate ? (
+                <input
+                  ref={endDateInputRef}
+                  type="date"
+                  className="stage-list-item-date-input"
+                  value={endDate ? endDate.toISOString().split('T')[0] : ''}
+                  min={startDate ? startDate.toISOString().split('T')[0] : undefined}
+                  onChange={handleEndDateChange}
+                  onBlur={() => setEditingEndDate(false)}
+                />
+              ) : (
+                <button
+                  className="stage-list-item-date-button"
+                  onClick={handleEndDateClick}
+                  type="button"
+                >
+                  {formatDate(endDate)}
+                </button>
+              )}
             </div>
           )}
         </div>

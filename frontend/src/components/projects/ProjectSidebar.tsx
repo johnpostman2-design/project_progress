@@ -76,6 +76,8 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
   const [showStageDeleteConfirm, setShowStageDeleteConfirm] = useState<string | null>(null)
   const [triggerProjectNameEdit, setTriggerProjectNameEdit] = useState(0)
   const [triggerStageNameEdit, setTriggerStageNameEdit] = useState(0)
+  const [editingStageDetailsDate, setEditingStageDetailsDate] = useState<'start' | 'end' | null>(null)
+  const [editingDate, setEditingDate] = useState<{ stageId: string; field: 'start' | 'end' } | null>(null)
   const startDateInputRef = useRef<HTMLInputElement>(null)
   const endDateInputRef = useRef<HTMLInputElement>(null)
   const sidebarRef = useRef<HTMLDivElement>(null)
@@ -180,42 +182,74 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
   const startDateInputRefs = useRef<Record<string, HTMLInputElement | null>>({})
   const endDateInputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
+  useEffect(() => {
+    if (editingStageDetailsDate === 'start' && startDateInputRef.current) {
+      startDateInputRef.current.focus()
+      if ('showPicker' in startDateInputRef.current && typeof (startDateInputRef.current as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+        try {
+          (startDateInputRef.current as HTMLInputElement & { showPicker: () => void }).showPicker()
+        } catch {
+          // ignore
+        }
+      }
+    }
+  }, [editingStageDetailsDate])
+
+  useEffect(() => {
+    if (editingStageDetailsDate === 'end' && endDateInputRef.current) {
+      endDateInputRef.current.focus()
+      if ('showPicker' in endDateInputRef.current && typeof (endDateInputRef.current as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+        try {
+          (endDateInputRef.current as HTMLInputElement & { showPicker: () => void }).showPicker()
+        } catch {
+          // ignore
+        }
+      }
+    }
+  }, [editingStageDetailsDate])
+
+  useEffect(() => {
+    if (editingDate && endDateInputRefs.current[editingDate.stageId] && editingDate.field === 'end') {
+      const inputRef = endDateInputRefs.current[editingDate.stageId]
+      if (inputRef) {
+        inputRef.focus()
+        if ('showPicker' in inputRef && typeof (inputRef as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+          try {
+            (inputRef as HTMLInputElement & { showPicker: () => void }).showPicker()
+          } catch {
+            // ignore
+          }
+        }
+      }
+    }
+  }, [editingDate])
+
+  useEffect(() => {
+    if (editingDate && startDateInputRefs.current[editingDate.stageId] && editingDate.field === 'start') {
+      const inputRef = startDateInputRefs.current[editingDate.stageId]
+      if (inputRef) {
+        inputRef.focus()
+        if ('showPicker' in inputRef && typeof (inputRef as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+          try {
+            (inputRef as HTMLInputElement & { showPicker: () => void }).showPicker()
+          } catch {
+            // ignore
+          }
+        }
+      }
+    }
+  }, [editingDate])
+
   const handleStartDateClick = (stage: Stage, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    const inputRef = startDateInputRefs.current[stage.id]
-    if (inputRef) {
-      if ('showPicker' in inputRef && typeof (inputRef as any).showPicker === 'function') {
-        try {
-          (inputRef as any).showPicker()
-        } catch (err) {
-          inputRef.focus()
-          inputRef.click()
-        }
-      } else {
-        inputRef.focus()
-        inputRef.click()
-      }
-    }
+    setEditingDate({ stageId: stage.id, field: 'start' })
   }
 
   const handleEndDateClick = (stage: Stage, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    const inputRef = endDateInputRefs.current[stage.id]
-    if (inputRef) {
-      if ('showPicker' in inputRef && typeof (inputRef as any).showPicker === 'function') {
-        try {
-          (inputRef as any).showPicker()
-        } catch (err) {
-          inputRef.focus()
-          inputRef.click()
-        }
-      } else {
-        inputRef.focus()
-        inputRef.click()
-      }
-    }
+    setEditingDate({ stageId: stage.id, field: 'end' })
   }
 
   const handleStartDateChange = (stage: Stage, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -245,8 +279,8 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
     }
   }
 
-  const handleStageDetailsStartDateClick = () => startDateInputRef.current?.showPicker?.()
-  const handleStageDetailsEndDateClick = () => endDateInputRef.current?.showPicker?.()
+  const handleStageDetailsStartDateClick = () => setEditingStageDetailsDate('start')
+  const handleStageDetailsEndDateClick = () => setEditingStageDetailsDate('end')
 
   const completedCount = stageTasks.filter((t) => t.isCompleted).length
   const totalCount = stageTasks.length
@@ -291,27 +325,37 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
               </div>
             </div>
             <div className="project-sidebar-dates project-sidebar-stage-dates">
-              <input
-                ref={startDateInputRef}
-                type="date"
-                className="project-sidebar-date-input-hidden"
-                value={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : ''}
-                onChange={(e) => handleStartDateChange(selectedStageProp, e)}
-              />
-              <input
-                ref={endDateInputRef}
-                type="date"
-                className="project-sidebar-date-input-hidden"
-                value={selectedStageProp.endDate ? timestampToDate(selectedStageProp.endDate).toISOString().split('T')[0] : ''}
-                onChange={(e) => handleEndDateChange(selectedStageProp, e)}
-              />
-              <button type="button" className="project-sidebar-btn-date" onClick={handleStageDetailsStartDateClick}>
-                {formatDateDisplay(selectedStageProp.startDate)}
-              </button>
+              {editingStageDetailsDate === 'start' ? (
+                <input
+                  ref={startDateInputRef}
+                  type="date"
+                  className="project-sidebar-date-input-visible"
+                  value={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : ''}
+                  min={undefined}
+                  onChange={(e) => handleStartDateChange(selectedStageProp, e)}
+                  onBlur={() => setEditingStageDetailsDate(null)}
+                />
+              ) : (
+                <button type="button" className="project-sidebar-btn-date" onClick={handleStageDetailsStartDateClick}>
+                  {formatDateDisplay(selectedStageProp.startDate)}
+                </button>
+              )}
               <div className="project-sidebar-date-arrow">→</div>
-              <button type="button" className="project-sidebar-btn-date" onClick={handleStageDetailsEndDateClick}>
-                {formatDateDisplay(selectedStageProp.endDate)}
-              </button>
+              {editingStageDetailsDate === 'end' ? (
+                <input
+                  ref={endDateInputRef}
+                  type="date"
+                  className="project-sidebar-date-input-visible"
+                  value={selectedStageProp.endDate ? timestampToDate(selectedStageProp.endDate).toISOString().split('T')[0] : ''}
+                  min={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : undefined}
+                  onChange={(e) => handleEndDateChange(selectedStageProp, e)}
+                  onBlur={() => setEditingStageDetailsDate(null)}
+                />
+              ) : (
+                <button type="button" className="project-sidebar-btn-date" onClick={handleStageDetailsEndDateClick}>
+                  {formatDateDisplay(selectedStageProp.endDate)}
+                </button>
+              )}
             </div>
             <div className="project-sidebar-stage-tasks-section">
               <p className="project-sidebar-stage-tasks-counter">{completedCount} / {totalCount} задач</p>
@@ -534,6 +578,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                     >
                       {showDates && (
                         <div
+                          className="project-sidebar-stage-dates-inner"
                           onMouseEnter={() => {
                             setHoveredStageArea(prev => ({ ...prev, [stage.id]: 'dates' }))
                           }}
@@ -544,43 +589,48 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                               return newState
                             })
                           }}
-                          style={{ display: 'flex', gap: 'var(--spacing-4, 4px)', alignItems: 'center' }}
                         >
-                          <input
-                            ref={(el) => { startDateInputRefs.current[stage.id] = el }}
-                            type="date"
-                            value={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : ''}
-                            min={undefined}
-                            onChange={(e) => handleStartDateChange(stage, e)}
-                            style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }}
-                            tabIndex={-1}
-                          />
-                          <button
-                            className="project-sidebar-stage-date-button"
-                            onClick={(e) => handleStartDateClick(stage, e)}
-                            type="button"
-                          >
-                            {formatDate(stage.startDate)}
-                          </button>
+                          {editingDate?.stageId === stage.id && editingDate?.field === 'start' ? (
+                            <input
+                              ref={(el) => { startDateInputRefs.current[stage.id] = el }}
+                              type="date"
+                              className="project-sidebar-stage-date-input"
+                              value={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : ''}
+                              min={undefined}
+                              onChange={(e) => handleStartDateChange(stage, e)}
+                              onBlur={() => setEditingDate(null)}
+                            />
+                          ) : (
+                            <button
+                              className="project-sidebar-stage-date-button"
+                              onClick={(e) => handleStartDateClick(stage, e)}
+                              type="button"
+                            >
+                              {formatDate(stage.startDate)}
+                            </button>
+                          )}
                           <div className="project-sidebar-stage-arrow">
                             <Icon name="arrow-right" size={16} className="project-sidebar-stage-arrow-icon" />
                           </div>
-                          <input
-                            ref={(el) => { endDateInputRefs.current[stage.id] = el }}
-                            type="date"
-                            value={stage.endDate ? timestampToDate(stage.endDate).toISOString().split('T')[0] : ''}
-                            min={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : undefined}
-                            onChange={(e) => handleEndDateChange(stage, e)}
-                            style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }}
-                            tabIndex={-1}
-                          />
-                          <button
-                            className="project-sidebar-stage-date-button"
-                            onClick={(e) => handleEndDateClick(stage, e)}
-                            type="button"
-                          >
-                            {formatDate(stage.endDate)}
-                          </button>
+                          {editingDate?.stageId === stage.id && editingDate?.field === 'end' ? (
+                            <input
+                              ref={(el) => { endDateInputRefs.current[stage.id] = el }}
+                              type="date"
+                              className="project-sidebar-stage-date-input"
+                              value={stage.endDate ? timestampToDate(stage.endDate).toISOString().split('T')[0] : ''}
+                              min={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : undefined}
+                              onChange={(e) => handleEndDateChange(stage, e)}
+                              onBlur={() => setEditingDate(null)}
+                            />
+                          ) : (
+                            <button
+                              className="project-sidebar-stage-date-button"
+                              onClick={(e) => handleEndDateClick(stage, e)}
+                              type="button"
+                            >
+                              {formatDate(stage.endDate)}
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
