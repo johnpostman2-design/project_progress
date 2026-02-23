@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Project } from '../../models/project'
 import { Stage } from '../../models/stage'
 import { Task, sortTasksForDisplay } from '../../models/task'
-import { formatDateDisplay, parseDateFromPaste, timestampToDate } from '../../utils/dateUtils'
+import { formatDateDisplay, parseDateFromPaste, preventDateInputArrowChange, timestampToDate } from '../../utils/dateUtils'
 import { Icon } from '../ui/Icon'
 import { ProjectDropdownMenu } from './ProjectDropdownMenu'
 import { StageDropdownMenu } from '../stages/StageDropdownMenu'
@@ -383,6 +383,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                     min={undefined}
                     onChange={(e) => handleStartDateChange(selectedStageProp, e)}
                     onPaste={handleStageDetailsStartDatePaste}
+                    onKeyDown={preventDateInputArrowChange}
                     onBlur={() => setEditingStageDetailsDate(null)}
                   />
                   {!selectedStageProp.startDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
@@ -403,6 +404,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                     min={selectedStageProp.startDate ? timestampToDate(selectedStageProp.startDate).toISOString().split('T')[0] : undefined}
                     onChange={(e) => handleEndDateChange(selectedStageProp, e)}
                     onPaste={handleStageDetailsEndDatePaste}
+                    onKeyDown={preventDateInputArrowChange}
                     onBlur={() => setEditingStageDetailsDate(null)}
                   />
                   {!selectedStageProp.endDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
@@ -656,6 +658,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                                 min={undefined}
                                 onChange={(e) => handleStartDateChange(stage, e)}
                                 onPaste={(e) => handleStartDatePaste(stage, e)}
+                                onKeyDown={preventDateInputArrowChange}
                                 onBlur={() => setEditingDate(null)}
                               />
                               {!stage.startDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}
@@ -682,6 +685,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = (props) => {
                                 min={stage.startDate ? timestampToDate(stage.startDate).toISOString().split('T')[0] : undefined}
                                 onChange={(e) => handleEndDateChange(stage, e)}
                                 onPaste={(e) => handleEndDatePaste(stage, e)}
+                                onKeyDown={preventDateInputArrowChange}
                                 onBlur={() => setEditingDate(null)}
                               />
                               {!stage.endDate && <span className="project-sidebar-date-placeholder">00.00.0000</span>}

@@ -618,16 +618,17 @@
   padding: var(--spacing-4) 0;
 }
 
-/* Не выполнена — иконка content/tertiary (Figma 516:2475) */
+/* Не выполнена — иконка icon-check: content-tertiary */
 .project-sidebar-stage-task-icon {
   flex-shrink: 0;
   color: var(--content-tertiary);
 }
-.project-sidebar-stage-task-icon svg {
+.project-sidebar-stage-task-icon svg,
+.project-sidebar-stage-task-icon path {
   fill: currentColor;
 }
 
-/* Выполнена — иконка content/success (Figma 516:2476) */
+/* Выполнена — иконка icon-check: content-success */
 .project-sidebar-stage-task-item.completed .project-sidebar-stage-task-icon {
   color: var(--content-success);
 }

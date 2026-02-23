@@ -41,6 +41,16 @@ export const timestampToDate = (timestamp: Timestamp): Date => {
 }
 
 /**
+ * Отключает изменение даты по стрелкам вверх/вниз в input type="date",
+ * чтобы стрелки влево/вправо работали как перемещение между сегментами (день/месяц/год).
+ */
+export function preventDateInputArrowChange(e: { key: string; preventDefault(): void }): void {
+  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    e.preventDefault()
+  }
+}
+
+/**
  * Парсит строку из буфера в YYYY-MM-DD для input type="date".
  * Поддерживает: YYYY-MM-DD, DD.MM.YYYY, DD.MM.YY, DD/MM/YYYY.
  */

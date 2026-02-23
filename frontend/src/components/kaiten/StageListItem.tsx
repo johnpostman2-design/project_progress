@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { KaitenGroup } from '../../services/kaiten/kaitenTypes'
-import { parseDateFromPaste } from '../../utils/dateUtils'
+import { parseDateFromPaste, preventDateInputArrowChange } from '../../utils/dateUtils'
 import { Button } from '../common/Button'
 import { Input } from '../common/Input'
 import { Icon } from '../ui/Icon'
@@ -238,6 +238,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
                     min={undefined}
                     onChange={handleStartDateChange}
                     onPaste={handleStartDatePaste}
+                    onKeyDown={preventDateInputArrowChange}
                     onBlur={() => setEditingStartDate(false)}
                   />
                   {!startDate && <span className="stage-list-item-date-placeholder">00.00.0000</span>}
@@ -264,6 +265,7 @@ export const StageListItem: React.FC<StageListItemProps> = ({
                     min={startDate ? startDate.toISOString().split('T')[0] : undefined}
                     onChange={handleEndDateChange}
                     onPaste={handleEndDatePaste}
+                    onKeyDown={preventDateInputArrowChange}
                     onBlur={() => setEditingEndDate(false)}
                   />
                   {!endDate && <span className="stage-list-item-date-placeholder">00.00.0000</span>}

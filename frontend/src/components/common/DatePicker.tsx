@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { preventDateInputArrowChange } from '../../utils/dateUtils'
 import './DatePicker.css'
 
 interface DatePickerProps {
@@ -80,6 +81,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          onKeyDown={preventDateInputArrowChange}
           min={min?.toISOString().split('T')[0]}
           max={max?.toISOString().split('T')[0]}
           disabled={disabled}
