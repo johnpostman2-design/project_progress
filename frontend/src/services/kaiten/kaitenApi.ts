@@ -64,20 +64,34 @@ const apiRequest = async <T>(
   }
 }
 
-const SPACE_ID = 311956
+interface SpaceWithBoards {
+  id: number
+  boards?: Array<{
+    id: number
+    name?: string
+    title?: string
+    description?: string | null
+    created_at?: string
+    updated_at?: string
+  }>
+}
 
 export const getBoards = async (config: KaitenConfig): Promise<KaitenBoard[]> => {
-  const list = await apiRequest<KaitenBoard[]>(`/spaces/${SPACE_ID}/boards`, config)
-  if (!Array.isArray(list)) {
-    throw new KaitenApiError('Неверный формат ответа', 500)
+  const spaces = await apiRequest<SpaceWithBoards[]>('/spaces', config)
+  if (!Array.isArray(spaces) || spaces.length === 0) {
+    throw new KaitenApiError('No spaces returned from Kaiten', 500)
   }
-  return list.map((board) => ({
+  const space = spaces[0]
+  if (!space.boards || !Array.isArray(space.boards)) {
+    throw new KaitenApiError('No boards found in space', 500)
+  }
+  return space.boards.map((board) => ({
     id: board.id,
-    name: board.name ?? `Доска #${board.id}`,
+    name: board.name || board.title || `Доска #${board.id}`,
     description: board.description ?? null,
     created_at: board.created_at ?? new Date().toISOString(),
     updated_at: board.updated_at ?? new Date().toISOString(),
-    space_id: SPACE_ID,
+    space_id: space.id,
   }))
 }
 

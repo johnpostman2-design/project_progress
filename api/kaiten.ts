@@ -1,17 +1,16 @@
 /**
  * Прокси к Kaiten API. Только KAITEN_API_BASE и KAITEN_TOKEN.
- * Timeout 8s, in-memory cache 30s для GET /spaces и /spaces/:id/boards, лог запросов.
+ * Timeout 8s, in-memory cache 60s только для GET /spaces, лог запросов.
  */
 const REQUEST_TIMEOUT_MS = 8000
-const CACHE_TTL_MS = 30000
+const CACHE_TTL_MS = 60000
 
 type CacheEntry = { text: string; contentType: string; expiresAt: number }
 const cache = new Map<string, CacheEntry>()
 
 function isCacheable(method: string, path: string): boolean {
   if (method !== 'GET') return false
-  if (path === 'spaces') return true
-  return /^spaces\/[^/]+\/boards$/.test(path)
+  return path === 'spaces'
 }
 
 function logRequest(
