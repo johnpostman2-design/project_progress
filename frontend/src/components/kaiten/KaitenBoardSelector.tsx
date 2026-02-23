@@ -44,21 +44,30 @@ export const KaitenBoardSelector: React.FC<KaitenBoardSelectorProps> = ({
       return name.includes(query) || description.includes(query) || idStr.includes(query)
     })
 
-    // Сортировка: при вводе числа — доска с этим ID всегда первая; иначе точное совпадение названия/ID → начало → вхождение
     const queryTrimmed = searchQuery.trim()
-    const isNumericId = queryTrimmed !== '' && /^\d+$/.test(queryTrimmed)
+    const isNumericId = /^\d+$/.test(queryTrimmed)
     const idNum = isNumericId ? Number(queryTrimmed) : null
 
+    // При вводе числа явно выносим доску с этим ID в самое начало списка
+    if (idNum !== null) {
+      const exactMatch = filtered.find(
+        (b) => Number(b.id) === idNum || String(b.id).trim() === queryTrimmed
+      )
+      if (exactMatch) {
+        const rest = filtered.filter((b) => b.id !== exactMatch.id)
+        return [exactMatch, ...rest]
+      }
+    }
+
+    // Иначе сортировка: точное совпадение названия/ID → начало → вхождение
     return [...filtered].sort((a, b) => {
       const score = (board: KaitenBoard) => {
         const n = (board.name || '').toLowerCase()
-        const idStr = String(board.id)
-        const exactIdMatch = idNum !== null && (Number(board.id) === idNum || idStr === queryTrimmed)
-        if (exactIdMatch) return 0
-        if (n === query || idStr === query) return 1
-        if (n.startsWith(query) || idStr.startsWith(queryTrimmed)) return 2
-        if (n.includes(query)) return 3
-        return 4
+        const idStr = String(board.id).trim()
+        if (n === query || idStr === queryTrimmed) return 0
+        if (n.startsWith(query) || idStr.startsWith(queryTrimmed)) return 1
+        if (n.includes(query)) return 2
+        return 3
       }
       return score(a) - score(b)
     })
