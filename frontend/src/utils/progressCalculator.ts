@@ -65,3 +65,21 @@ export const getTotalTasksCount = (tasks: Task[], stageId: string): number => {
     (task) => task.stageId === stageId || task.group_id === Number(stageId)
   ).length
 }
+
+/** Задачи этапа (сопоставление по stageId или group_id / kaitenGroupId) */
+function getStageTasks(stage: Stage, tasks: Task[]): Task[] {
+  return tasks.filter((task) => {
+    if (task.stageId != null && task.stageId === stage.id) return true
+    if (task.group_id != null && stage.kaitenGroupId != null && String(task.group_id) === String(stage.kaitenGroupId)) return true
+    return false
+  })
+}
+
+/**
+ * Этап считается завершённым, если: статус этапа = completed ИЛИ в этапе есть задачи и все они выполнены.
+ */
+export const isStageEffectivelyCompleted = (stage: Stage, tasks: Task[]): boolean => {
+  if (stage.status === 'completed') return true
+  const stageTasks = getStageTasks(stage, tasks)
+  return stageTasks.length > 0 && stageTasks.every((t) => t.isCompleted)
+}

@@ -10,6 +10,7 @@ import { Timeline } from '../components/timeline/Timeline'
 import { LoadingSpinner } from '../components/common/LoadingSpinner'
 import { updateProject, deleteProject, getStages } from '../services/supabase/supabaseService'
 import { restoreProject } from '../models/project'
+import { isStageEffectivelyCompleted } from '../utils/progressCalculator'
 import { useKaitenSync } from '../hooks/useKaitenSync'
 import { KaitenConfig } from '../services/kaiten/kaitenTypes'
 import { DeleteToast, type DeleteToastRef } from '../components/common/DeleteToast'
@@ -147,7 +148,7 @@ export const Archive: React.FC = () => {
                 const projectStages = stagesMap[project.id] || []
                 const projectTasks = displayTasks[project.id] || []
                 const isProjectFullyCompleted =
-                  projectStages.length > 0 && projectStages.every((s) => s.status === 'completed')
+                  projectStages.length > 0 && projectStages.every((s) => isStageEffectivelyCompleted(s, projectTasks))
                 return (
                   <div key={project.id} className="archive-project-timeline-wrapper">
                     <div

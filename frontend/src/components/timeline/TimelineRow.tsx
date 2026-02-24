@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { Stage } from '../../models/stage'
 import { Task } from '../../models/task'
 import { ProgressBar } from './ProgressBar'
-import { calculateStageProgress } from '../../utils/progressCalculator'
+import { calculateStageProgress, isStageEffectivelyCompleted } from '../../utils/progressCalculator'
 import { formatDateShort } from '../../utils/dateUtils'
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24
@@ -164,7 +164,7 @@ export const TimelineRow: React.FC<TimelineRowProps> = ({
               stageName={stage.name}
               taskCount={totalCount}
               isPaused={stage.status === 'paused'}
-              isCompleted={stage.status === 'completed'}
+              isCompleted={isStageEffectivelyCompleted(stage, tasks)}
               isProjectFullyCompleted={isProjectFullyCompleted}
               className={index === stages.length - 1 ? 'progress-bar-last' : ''}
             />

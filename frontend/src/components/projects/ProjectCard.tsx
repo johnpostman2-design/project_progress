@@ -3,7 +3,7 @@ import { Project } from '../../models/project'
 import { Stage } from '../../models/stage'
 import { Task } from '../../models/task'
 import { ProgressBar } from '../timeline/ProgressBar'
-import { calculateStageProgress } from '../../utils/progressCalculator'
+import { calculateStageProgress, isStageEffectivelyCompleted } from '../../utils/progressCalculator'
 import './ProjectCard.css'
 
 interface ProjectCardProps {
@@ -23,9 +23,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   isSelected = false,
   className = '',
 }) => {
-  // Calculate overall project progress (average of all stages)
+  // Этап завершён, если статус completed или все задачи в этапе выполнены
   const isProjectFullyCompleted =
-    stages.length > 0 && stages.every((s) => s.status === 'completed')
+    stages.length > 0 && stages.every((s) => isStageEffectivelyCompleted(s, tasks))
   const stagesProgress = stages.map((stage) => calculateStageProgress(stage, tasks))
   const overallProgress =
     stagesProgress.length > 0
@@ -56,7 +56,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                 stageName={stage.name}
                 taskCount={totalCount}
                 isPaused={stage.status === 'paused'}
-                isCompleted={stage.status === 'completed'}
+                isCompleted={isStageEffectivelyCompleted(stage, tasks)}
                 isProjectFullyCompleted={isProjectFullyCompleted}
               />
             </div>

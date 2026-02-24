@@ -22,6 +22,7 @@ import { KaitenConfig, KaitenGroup } from '../services/kaiten/kaitenTypes'
 import { archiveProject } from '../models/project'
 import { pauseStage, canPauseStage, completeStage, reactivateStage } from '../models/stage'
 import { dateToTimestamp, timestampToDate } from '../utils/dateUtils'
+import { isStageEffectivelyCompleted } from '../utils/progressCalculator'
 import { createTestProject } from '../utils/createTestProject'
 import { DeleteToast, type DeleteToastRef } from '../components/common/DeleteToast'
 import { ConfirmDialog } from '../components/common/ConfirmDialog'
@@ -433,7 +434,7 @@ export const Dashboard: React.FC = () => {
                 const projectStages = stagesMap[project.id] || []
                 const projectTasks = displayTasks[project.id] || []
                 const isProjectFullyCompleted =
-                  projectStages.length > 0 && projectStages.every((s) => s.status === 'completed')
+                  projectStages.length > 0 && projectStages.every((s) => isStageEffectivelyCompleted(s, projectTasks))
                 return (
                   <div key={project.id} className="dashboard-project-timeline-wrapper">
                     <div

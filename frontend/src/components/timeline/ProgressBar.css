@@ -114,18 +114,12 @@
   background: var(--surface-tertiary-main);
 }
 
-/* Завершённый этап (Figma 218:101): фон surface/tertiary */
-.progress-bar.completed {
-  background: var(--surface-tertiary-main);
-}
-
+/* Завершённый этап — тот же вид, что и заполняющийся прогресс-бар: светлый фон + тёмная заливка на 100%. right: -1px чтобы заливка доходила до правого края (без белой полоски) */
 .progress-bar.completed .progress-bar-fill {
-  left: -1px;
   right: -1px;
-  top: -1px;
-  bottom: -1px;
   width: auto !important;
-  background: var(--surface-tertiary-main);
+  min-width: 0;
+  border-radius: var(--radius-s) 0 0 var(--radius-s);
 }
 
 .progress-bar.completed .progress-bar-content {
