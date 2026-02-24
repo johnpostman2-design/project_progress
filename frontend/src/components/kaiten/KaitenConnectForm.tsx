@@ -24,14 +24,17 @@ export const KaitenConnectForm: React.FC<KaitenConnectFormProps> = ({
   const [domain, setDomain] = useState<string>(existingConfig?.domain || 'onyagency')
   const [boards, setBoards] = useState<KaitenBoard[]>([])
   const [selectedBoardId, setSelectedBoardId] = useState<number | null>(existingConfig?.boardId || null)
+  const [boardSearchQuery, setBoardSearchQuery] = useState('')
   const [loadingBoards, setLoadingBoards] = useState(false)
   const [connectedConfig, setConnectedConfig] = useState<KaitenConfig | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Сбрасываем connectedConfig при изменении existingConfig, чтобы можно было перепривязать
+  // Подставляем connectedConfig из existingConfig только если там есть доска (boardId), иначе после открытия формы «новый проект» показывалась бы кнопка «Подключить» и ошибка «Сначала подключитесь к Kaiten»
   useEffect(() => {
-    setConnectedConfig(existingConfig || null)
+    setConnectedConfig(
+      existingConfig?.boardId != null ? existingConfig : null
+    )
   }, [existingConfig])
 
   // Загрузка списка досок только по действию пользователя (выбор доски при создании/импорте).
@@ -173,8 +176,13 @@ export const KaitenConnectForm: React.FC<KaitenConnectFormProps> = ({
               <KaitenBoardSelector
                 boards={boards}
                 selectedBoardId={selectedBoardId || undefined}
-                onSelect={(board) => setSelectedBoardId(board.id)}
+                onSelect={(board) => {
+                  setSelectedBoardId(board.id)
+                  setBoardSearchQuery(board.name || '')
+                }}
                 loading={loadingBoards}
+                searchQuery={boardSearchQuery}
+                onSearchQueryChange={setBoardSearchQuery}
               />
             </div>
           )}

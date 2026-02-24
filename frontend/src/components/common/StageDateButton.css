@@ -8,7 +8,7 @@
   background: var(--surface-primary-main, white);
   border: none;
   border-radius: var(--s, 4px);
-  width: 100px;
+  width: 80px;
   font-family: var(--typescale-caption-medium-font, 'ONY_ONE:regular', sans-serif);
   font-weight: var(--typescale-caption-medium-weight, normal);
   font-size: 12px;

@@ -182,7 +182,15 @@ export const KaitenImportModal: React.FC<KaitenImportModalProps> = ({
     }
   }
 
-  // Если открыта форма подключения, показываем её
+  // Если открыта форма подключения, показываем её.
+  // При создании нового проекта не подставляем сохранённую доску (boardId) — пользователь должен явно выбрать доску, иначе подставлялась бы прошлая (например Sokolov Beauty) и этапы загружались с неё.
+  const connectFormConfig =
+    existingProjectId != null
+      ? currentConfig
+      : currentConfig
+        ? { ...currentConfig, boardId: undefined }
+        : null
+
   if (showConnectForm) {
     return (
       <KaitenConnectForm
@@ -192,7 +200,7 @@ export const KaitenImportModal: React.FC<KaitenImportModalProps> = ({
         onBack={() => {
           setShowConnectForm(false)
         }}
-        existingConfig={currentConfig}
+        existingConfig={connectFormConfig as KaitenConfig | null}
         className={className}
       />
     )
