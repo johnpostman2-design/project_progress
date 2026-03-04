@@ -1,0 +1,45 @@
+/* Отсечка текущей даты (Figma 577:14218) */
+.today-pointer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.today-pointer-line {
+  flex: 1;
+  min-height: 0;
+  width: 1px;
+  min-width: 1px;
+  border-radius: var(--radius-xs, 2px);
+  background: var(--content-brand);
+  box-shadow: 0 0 0 2px var(--content-invert);
+  box-sizing: content-box;
+}
+
+/* Маячок 8×8 px (Figma 577:14218) */
+.today-pointer-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--content-brand);
+}
+
+.today-pointer-date {
+  flex-shrink: 0;
+  padding: var(--spacing-4, 4px);
+  border-radius: var(--radius-s, 4px);
+  background: var(--content-brand);
+  color: var(--content-invert);
+  font-family: var(--font-family);
+  font-size: var(--font-size-caption, 12px);
+  line-height: var(--line-height-caption, 14px);
+  font-weight: 500;
+  white-space: nowrap;
+}

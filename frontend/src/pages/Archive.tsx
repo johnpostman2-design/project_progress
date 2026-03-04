@@ -26,6 +26,7 @@ export const Archive: React.FC = () => {
 
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [selectedStage, setSelectedStage] = useState<Stage | null>(null)
+  const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null)
   const [stagesMap, setStagesMap] = useState<Record<string, Stage[]>>({})
   const [tasks, setTasks] = useState<Record<string, Task[]>>({})
   const [showSidebar, setShowSidebar] = useState(false)
@@ -143,7 +144,17 @@ export const Archive: React.FC = () => {
               <p className="archive-empty-state-text">В архиве нет проектов</p>
             </div>
           ) : (
-            <div className="archive-projects-timelines">
+            <div
+              className="archive-projects-timelines"
+              onClick={(e) => {
+                if (!(e.target as HTMLElement).closest('.timeline-container')) {
+                  setShowSidebar(false)
+                  setSelectedProject(null)
+                  setSelectedStage(null)
+                }
+              }}
+              role="presentation"
+            >
               {archivedProjects.map((project) => {
                 const projectStages = stagesMap[project.id] || []
                 const projectTasks = displayTasks[project.id] || []
@@ -155,6 +166,8 @@ export const Archive: React.FC = () => {
                       className={`timeline-container${selectedProject?.id === project.id ? ' timeline-container-active' : ''}${isProjectFullyCompleted ? ' timeline-container-completed' : ''}`}
                       role="button"
                       tabIndex={0}
+                      onMouseEnter={() => setHoveredProjectId(project.id)}
+                      onMouseLeave={() => setHoveredProjectId(null)}
                       onClick={() => {
                         setSelectedProject(project)
                         setSelectedStage(null)
@@ -188,6 +201,8 @@ export const Archive: React.FC = () => {
                             setShowSidebar(true)
                           }}
                           sequential={false}
+                          isHovered={hoveredProjectId === project.id}
+                          isSelected={selectedProject?.id === project.id}
                         />
                       </div>
                     </div>
@@ -218,6 +233,7 @@ export const Archive: React.FC = () => {
             onBackToProject={() => setSelectedStage(null)}
             onClose={() => {
               setShowSidebar(false)
+              setSelectedProject(null)
               setSelectedStage(null)
             }}
             onUpdate={async (updatedProject) => {

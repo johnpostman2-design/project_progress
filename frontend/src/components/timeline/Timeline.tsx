@@ -4,7 +4,11 @@ import { Task } from '../../models/task'
 import { Project } from '../../models/project'
 import { calculateTimelineLayout, TimelineRow as TimelineRowType } from '../../utils/timelineLayout'
 import { TimelineRow } from './TimelineRow'
+import { TodayPointer } from './TodayPointer'
+import { formatDateShort } from '../../utils/dateUtils'
 import './Timeline.css'
+
+const MS_PER_DAY = 1000 * 60 * 60 * 24
 
 interface TimelineProps {
   stages: Stage[]
@@ -15,6 +19,9 @@ interface TimelineProps {
   onStageClick?: (stage: Stage) => void
   onTitleClick?: () => void // Клик на заголовок таймлайна
   sequential?: boolean // Если true, все этапы в одной строке последовательно
+  /** Показывать у отсечки дату вместо маячка (при hover/выборе таймлайна) */
+  isHovered?: boolean
+  isSelected?: boolean
   className?: string
 }
 
@@ -26,6 +33,8 @@ export const Timeline: React.FC<TimelineProps> = ({
   onStageClick,
   onTitleClick,
   sequential = false,
+  isHovered = false,
+  isSelected = false,
   className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -71,12 +80,50 @@ export const Timeline: React.FC<TimelineProps> = ({
   const isProjectFullyCompleted =
     stages.length > 0 && stages.every((s) => s.status === 'completed')
 
+  // Позиция отсечки «сегодня» по горизонтали (Figma 577:13942)
+  const todayPointer = useMemo(() => {
+    if (layout.rows.length === 0 || containerWidth <= 0) return null
+    const start = layout.projectStartDate
+    const end = layout.projectEndDate
+    if (end <= start) return null
+    const now = new Date()
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+    if (todayStart < start || todayStart > end) return null
+    const ratio = (todayStart - start) / (end - start)
+    const todayX = ratio * containerWidth
+    const dateLabel = formatDateShort(new Date(todayStart))
+    return { todayX, dateLabel }
+  }, [layout.rows.length, layout.projectStartDate, layout.projectEndDate, containerWidth])
+
+  const showDateOnPointer = isHovered || isSelected
+
   return (
     <div 
       ref={containerRef}
       className={`timeline ${className}`} 
-      style={{ flex: 1, minWidth: 0, width: '100%' }}
+      style={{ flex: 1, minWidth: 0, width: '100%', position: 'relative' }}
     >
+      {todayPointer != null && (
+        <div
+          className="timeline-today-pointer-wrapper"
+          style={{
+            position: 'absolute',
+            left: todayPointer.todayX,
+            top: 0,
+            bottom: 0,
+            transform: 'translateX(-50%)',
+            width: 1,
+            minWidth: 1,
+            overflow: 'visible',
+            zIndex: 10,
+          }}
+        >
+          <TodayPointer
+            showDateLabel={showDateOnPointer}
+            dateLabel={todayPointer.dateLabel}
+          />
+        </div>
+      )}
       {layout.rows.map((row: TimelineRowType, index: number) => (
         <TimelineRow
           key={index}

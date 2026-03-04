@@ -33,6 +33,7 @@ export const Dashboard: React.FC = () => {
   const { count: archivedCount, refetch: refetchArchivedCount } = useArchivedCount()
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [selectedStage, setSelectedStage] = useState<Stage | null>(null)
+  const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null)
   const [tasks, setTasks] = useState<Record<string, Task[]>>({}) // projectId -> tasks
   const [stagesMap, setStagesMap] = useState<Record<string, Stage[]>>({}) // projectId -> stages
   const [showImportModal, setShowImportModal] = useState(false)
@@ -429,7 +430,17 @@ export const Dashboard: React.FC = () => {
               <p>Нет проектов. Создайте первый проект, нажав кнопку +</p>
             </div>
           ) : (
-            <div className="dashboard-projects-timelines">
+            <div
+              className="dashboard-projects-timelines"
+              onClick={(e) => {
+                if (!(e.target as HTMLElement).closest('.timeline-container')) {
+                  setShowSidebar(false)
+                  setSelectedProject(null)
+                  setSelectedStage(null)
+                }
+              }}
+              role="presentation"
+            >
               {projects.filter((p) => !pendingDeleteProjectIds.has(p.id)).map((project) => {
                 const projectStages = stagesMap[project.id] || []
                 const projectTasks = displayTasks[project.id] || []
@@ -441,6 +452,8 @@ export const Dashboard: React.FC = () => {
                       className={`timeline-container${selectedProject?.id === project.id ? ' timeline-container-active' : ''}${isProjectFullyCompleted ? ' timeline-container-completed' : ''}`}
                       role="button"
                       tabIndex={0}
+                      onMouseEnter={() => setHoveredProjectId(project.id)}
+                      onMouseLeave={() => setHoveredProjectId(null)}
                       onClick={() => {
                         setShowImportModal(false)
                         setSelectedProject(project)
@@ -478,6 +491,8 @@ export const Dashboard: React.FC = () => {
                             setShowSidebar(true)
                           }}
                           sequential={false}
+                          isHovered={hoveredProjectId === project.id}
+                          isSelected={selectedProject?.id === project.id}
                         />
                       </div>
                     </div>
@@ -502,6 +517,7 @@ export const Dashboard: React.FC = () => {
             onBackToProject={() => setSelectedStage(null)}
             onClose={() => {
               setShowSidebar(false)
+              setSelectedProject(null)
               setSelectedStage(null)
             }}
             onUpdate={async (updatedProject) => {

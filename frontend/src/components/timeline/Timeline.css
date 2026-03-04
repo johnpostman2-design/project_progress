@@ -1,4 +1,4 @@
-/* Timeline container: fit width, no horizontal scroll; между строками строго 4px */
+/* Timeline container: без прокрутки; под отсечку: место под маячок/дату + отступ от нижнего края 4px (Figma 577:14218) */
 .timeline {
   display: flex;
   cursor: pointer;
@@ -10,9 +10,11 @@
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  overflow-y: visible;
+  padding-bottom: calc(24px + var(--spacing-4, 4px)); /* место под дату/маячок + отступ 4px от нижнего края */
 }
 
-/* Timeline row: высота под ProgressBar (32px), между строками только row-gap 4px; overflow-y: visible чтобы тултип дат не обрезался */
+/* Timeline row: без прокрутки */
 .timeline-row {
   display: flex;
   cursor: pointer;
@@ -41,7 +43,7 @@
   overflow: visible;
   cursor: pointer;
   position: relative;
-  z-index: 1;
+  z-index: 0;
 }
 
 .timeline-row-cell .progress-bar {
